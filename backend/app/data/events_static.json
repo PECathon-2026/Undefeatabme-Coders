@@ -1,0 +1,112 @@
+[
+  {
+    "id": "imo-leonids-2026",
+    "type": "meteor_shower",
+    "title": "Leonids Meteor Shower Peak (2026)",
+    "start_time": "2026-11-17T17:00:00+05:30",
+    "timezone": "Asia/Kolkata",
+    "source": "https://www.imo.net/resources/calendar/",
+    "verified_on": "2026-10-30",
+    "description": "Annual Leonids meteor shower peak produced by debris from comet Tempel-Tuttle. Best viewed under dark skies after midnight.",
+    "data_kind": "curated"
+  },
+  {
+    "id": "imo-geminids-2026",
+    "type": "meteor_shower",
+    "title": "Geminids Meteor Shower Peak (2026)",
+    "start_time": "2026-12-14T02:00:00+05:30",
+    "timezone": "Asia/Kolkata",
+    "source": "https://www.imo.net/resources/calendar/",
+    "verified_on": "2026-10-30",
+    "description": "Major annual Geminids meteor shower peak, originating from asteroid 3200 Phaethon with bright, multi-colored meteors.",
+    "data_kind": "curated"
+  },
+  {
+    "id": "imo-ursids-2026",
+    "type": "meteor_shower",
+    "title": "Ursids Meteor Shower Peak (2026)",
+    "start_time": "2026-12-22T14:00:00+05:30",
+    "timezone": "Asia/Kolkata",
+    "source": "https://www.imo.net/resources/calendar/",
+    "verified_on": "2026-10-30",
+    "description": "Minor late-year meteor shower radiating from Ursa Minor, associated with comet 8P/Tuttle.",
+    "data_kind": "curated"
+  },
+  {
+    "id": "imo-quadrantids-2027",
+    "type": "meteor_shower",
+    "title": "Quadrantids Meteor Shower Peak (2027)",
+    "start_time": "2027-01-03T20:00:00+05:30",
+    "timezone": "Asia/Kolkata",
+    "source": "https://www.imo.net/resources/calendar/",
+    "verified_on": "2026-10-30",
+    "description": "Strong northern hemisphere meteor shower with a sharp peak lasting just a few hours.",
+    "data_kind": "curated"
+  },
+  {
+    "id": "imo-lyrids-2027",
+    "type": "meteor_shower",
+    "title": "Lyrids Meteor Shower Peak (2027)",
+    "start_time": "2027-04-22T18:00:00+05:30",
+    "timezone": "Asia/Kolkata",
+    "source": "https://www.imo.net/resources/calendar/",
+    "verified_on": "2026-10-30",
+    "description": "Medium strength shower radiating from constellation Lyra, produced by comet C/1861 G1 Thatcher.",
+    "data_kind": "curated"
+  },
+  {
+    "id": "imo-eta-aquariids-2027",
+    "type": "meteor_shower",
+    "title": "Eta Aquariids Meteor Shower Peak (2027)",
+    "start_time": "2027-05-06T08:00:00+05:30",
+    "timezone": "Asia/Kolkata",
+    "source": "https://www.imo.net/resources/calendar/",
+    "verified_on": "2026-10-30",
+    "description": "Fast meteors associated with Halley's Comet, best viewed in the pre-dawn hours.",
+    "data_kind": "curated"
+  },
+  {
+    "id": "nasa-lunar-eclipse-2026-03",
+    "type": "eclipse",
+    "title": "Total Lunar Eclipse",
+    "start_time": "2026-03-03T17:04:00+05:30",
+    "timezone": "Asia/Kolkata",
+    "source": "https://eclipse.gsfc.nasa.gov/lunar.html",
+    "verified_on": "2026-10-30",
+    "description": "Total lunar eclipse with totality duration of ~58 minutes; Moon passes completely into Earth's umbral shadow.",
+    "data_kind": "curated"
+  },
+  {
+    "id": "nasa-solar-eclipse-2026-08",
+    "type": "eclipse",
+    "title": "Total Solar Eclipse",
+    "start_time": "2026-08-12T23:17:00+05:30",
+    "timezone": "Asia/Kolkata",
+    "source": "https://eclipse.gsfc.nasa.gov/solar.html",
+    "verified_on": "2026-10-30",
+    "description": "Total solar eclipse path crossing Greenland, western Iceland, and northern Spain.",
+    "data_kind": "curated"
+  },
+  {
+    "id": "nasa-lunar-eclipse-2026-08",
+    "type": "eclipse",
+    "title": "Partial Lunar Eclipse",
+    "start_time": "2026-08-28T09:44:00+05:30",
+    "timezone": "Asia/Kolkata",
+    "source": "https://eclipse.gsfc.nasa.gov/lunar.html",
+    "verified_on": "2026-10-30",
+    "description": "Partial lunar eclipse visible primarily across the Americas and Pacific.",
+    "data_kind": "curated"
+  },
+  {
+    "id": "nasa-solar-eclipse-2027-02",
+    "type": "eclipse",
+    "title": "Annular Solar Eclipse",
+    "start_time": "2027-02-06T21:31:00+05:30",
+    "timezone": "Asia/Kolkata",
+    "source": "https://eclipse.gsfc.nasa.gov/solar.html",
+    "verified_on": "2026-10-30",
+    "description": "Annular solar eclipse (ring of fire) path passing through the South Pacific, South America, and Atlantic.",
+    "data_kind": "curated"
+  }
+]

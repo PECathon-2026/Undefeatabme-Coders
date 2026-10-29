@@ -45,19 +45,6 @@ def test_locations_stub_validates_schema() -> None:
     assert model.disclaimer != ""
 
 
-def test_events_stub_validates_schema() -> None:
-    response = client.get("/api/events?type=all&date=2026-11-01")
-    assert response.status_code == 200
-    data = response.json()
-    model = EventsResponse.model_validate(data)
-    assert len(model.events) > 0
-    assert model.events[0].data_kind == "mock"
-    assert model.events[0].source == "sample"
-    assert model.query.type == "all"
-    assert model.query.date == "2026-11-01"
-    assert model.query.days == 90
-
-
 def test_restore_stub_returns_501() -> None:
     response = client.post("/api/restore")
     assert response.status_code == 501
@@ -97,6 +84,28 @@ def test_contract_schemas_can_validate_contract_samples() -> None:
     weather_model = WeatherResponse.model_validate(weather_sample)
     assert weather_model.location.lat == 30.7333
     assert weather_model.night_honor_score == 75
+
+    # Contract sample for EventsResponse
+    events_sample = {
+        "events": [
+            {
+                "id": "sample-leonids",
+                "type": "meteor_shower",
+                "title": "Leonids (sample entry)",
+                "start_time": "2026-11-17T00:00:00+05:30",
+                "timezone": "Asia/Kolkata",
+                "source": "sample",
+                "description": "Sample only. Real entries carry a source URL.",
+                "data_kind": "mock",
+            }
+        ],
+        "query": {"type": "all", "date": "2026-11-01", "days": 90},
+        "warnings": [],
+        "generated_at": "2026-10-30T21:05:00+05:30",
+    }
+    events_model = EventsResponse.model_validate(events_sample)
+    assert len(events_model.events) == 1
+    assert events_model.events[0].id == "sample-leonids"
 
     # Contract sample for RestoreResponse
     restore_sample = {
