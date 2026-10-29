@@ -26,7 +26,6 @@ def create_in_memory_image(width: int, height: int, fmt: str = "PNG") -> bytes:
 
 
 def test_cors_production_origin_header() -> None:
-    # Test CORS preflight with custom allowed origin
     prod_origin = "http://localhost:5173"
     response = client.options(
         "/api/health",
@@ -54,7 +53,6 @@ def test_cors_disallowed_origin() -> None:
 
 
 def test_error_shape_on_method_not_allowed() -> None:
-    # POST to /api/health (which only supports GET)
     response = client.delete("/api/health")
     assert response.status_code == 405
     data = response.json()
@@ -73,7 +71,6 @@ def test_error_shape_on_not_found() -> None:
 
 
 def test_image_exact_minimum_boundary_32px() -> None:
-    # Exactly 32x32 pixels (minimum valid size per contract)
     img_32px = create_in_memory_image(32, 32, "PNG")
     response = client.post(
         "/api/restore",
@@ -96,10 +93,21 @@ def test_image_empty_file_returns_422() -> None:
 
 
 def test_events_boundary_empty_window() -> None:
-    # Far future date where no static events are scheduled
     response = client.get("/api/events?type=meteor_shower&date=2099-01-01")
     assert response.status_code == 200
     data = response.json()
     assert data["query"]["date"] == "2099-01-01"
-    # Still valid schema, 0 events
     assert isinstance(data["events"], list)
+
+
+def test_restore_backend_defaults_to_baseline() -> None:
+    img_32px = create_in_memory_image(32, 32, "PNG")
+    with patch.dict(os.environ, {}, clear=False):
+        os.environ.pop("RESTORE_BACKEND", None)
+        response = client.post(
+            "/api/restore",
+            files={"file": ("test.png", img_32px, "image/png")},
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["model_name"] == "opencv-nlmeans-unsharp-baseline"
