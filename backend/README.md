@@ -9,6 +9,8 @@ FastAPI backend service powering **Tsukuyomi Watch**, an astronomical web app pr
 - Python **3.11, 3.12, or 3.13**
 - Git
 
+A clean production install works with only `backend/requirements.txt` (no heavy packages or PyTorch required).
+
 ---
 
 ## 2. Local Environment Setup
@@ -56,7 +58,7 @@ Run the full automated test suite using pytest:
 python -m pytest backend
 ```
 
-Run test suite with coverage report:
+Run test suite with verbose output:
 ```bash
 python -m pytest backend -v
 ```
@@ -67,8 +69,8 @@ python -m pytest backend -v
 
 | Variable | Default Value | Description |
 |---|---|---|
-| `CORS_ORIGINS` | `http://localhost:5173,http://127.0.0.1:5173` | Comma-separated list of allowed web origins for CORS headers. |
-| `RESTORE_BACKEND` | `baseline` | Image restoration engine: `baseline` (OpenCV Non-local Means & Unsharp Mask) or `model` (optional neural model). |
+| `CORS_ORIGINS` | `http://localhost:5173,http://127.0.0.1:5173` | Comma-separated list of allowed web origins for CORS headers. Set to the deployed frontend URL in production. |
+| `RESTORE_BACKEND` | `baseline` | Image restoration engine: defaults to `baseline` (OpenCV Non-local Means & Unsharp Mask) or `model` (optional neural model). |
 
 ---
 
@@ -110,12 +112,16 @@ Standard codes:
 
 ---
 
-## 8. Deployment Settings (Render / Railway)
+## 8. Deployment Settings (Render or Railway)
+
+Settings required for human deployment on **Render** or **Railway**:
 
 - **Build Command**: `pip install -r backend/requirements.txt`
 - **Start Command**: `python -m uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT`
 - **Health Check Path**: `/api/health`
 - **Environment Variables**:
-  - `CORS_ORIGINS`: Set to your deployed frontend domain (e.g., `https://tsukuyomi-watch.vercel.app`).
+  - `CORS_ORIGINS`: Set to the deployed frontend URL (e.g., `https://tsukuyomi-watch.vercel.app` or custom domain).
   - `RESTORE_BACKEND`: `baseline`
-- *Note*: Free-tier cloud instances sleep after inactivity; initial cold-start requests may take ~45-60 seconds.
+
+> [!NOTE]
+> Free tiers sleep on inactivity; the initial cold-start request can take about a minute.
