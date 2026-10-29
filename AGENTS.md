@@ -1,10 +1,22 @@
 # AGENTS.md: Rules for all AI assistants (Tsukuyomi Watch)
 
 ## Ownership (never edit outside your folder)
-- Frontend member: `frontend/` only
-- Backend member: `backend/app/routes/`, `services/`, `schemas/`, `main.py`, `requirements.txt`
-- AI member: `backend/app/ai/` only
-- Shared files (`docs/`, `AGENTS.md`, `README.md`, `.gitignore`): do not edit. Ask the human to propose a change in a PR.
+- Frontend: frontend/
+- Backend: backend/app/ (except backend/app/ai/), backend/tests/,
+  backend/requirements.txt, backend/requirements-dev.txt
+- AI: backend/app/ai/, backend/requirements-ai.txt
+- Shared (integration owner, PR only): docs/, AGENTS.md, README.md, .gitignore,
+  .env.example, .github/
+- docs/api-contracts.md changes need a PR approved by all three members.
+
+## Interfaces
+- Backend routes call backend/app/ai/service.py (restore_image, detect_sources).
+  AI never edits routes. Backend never edits backend/app/ai/.
+- Frontend only talks to the API described in docs/api-contracts.md.
+
+## Branches
+- One branch per task. After a PR is merged never reuse that branch.
+- Task list and prompts: docs/PLAYBOOK.md. Use Python 3.11 or 3.12.
 
 ## Contract
 - `docs/api-contracts.md` is the single source of truth for API shapes.

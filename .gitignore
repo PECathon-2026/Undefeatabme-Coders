@@ -1,0 +1,25 @@
+# secrets
+.env
+.env.*
+!.env.example
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+# node
+node_modules/
+dist/
+# editor and OS
+.vscode/
+.DS_Store
+Thumbs.db
+# AI artefacts: never commit
+outputs/
+backend/app/ai/samples/
+backend/app/ai/weights/
+*.pth
+*.pt
+*.onnx
+*.ckpt
+*.safetensors
