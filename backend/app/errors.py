@@ -33,8 +33,31 @@ STATUS_CODE_TO_CODE = {
     502: "upstream_unavailable",
 }
 
+IMAGE_CODE_TO_STATUS = {
+    "invalid_image": 422,
+    "unsupported_type": 415,
+    "file_too_large": 413,
+    "image_too_large": 422,
+}
+
 
 def register_error_handlers(app: FastAPI) -> None:
+    # Register ImageValidationError handler if AI package is present
+    try:
+        from backend.app.ai.validation import ImageValidationError
+
+        @app.exception_handler(ImageValidationError)
+        async def image_validation_exception_handler(
+            request: Request, exc: ImageValidationError
+        ) -> JSONResponse:
+            status_code = IMAGE_CODE_TO_STATUS.get(exc.code, 422)
+            return JSONResponse(
+                status_code=status_code,
+                content={"error": {"code": exc.code, "message": str(exc)}},
+            )
+    except ImportError:
+        pass
+
     @app.exception_handler(APIError)
     async def api_error_handler(request: Request, exc: APIError) -> JSONResponse:
         return JSONResponse(
@@ -94,4 +117,3 @@ def register_error_handlers(app: FastAPI) -> None:
                 }
             },
         )
-

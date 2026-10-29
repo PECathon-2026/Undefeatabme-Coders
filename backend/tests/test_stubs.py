@@ -45,24 +45,6 @@ def test_locations_stub_validates_schema() -> None:
     assert model.disclaimer != ""
 
 
-def test_restore_stub_returns_501() -> None:
-    response = client.post("/api/restore")
-    assert response.status_code == 501
-    data = response.json()
-    assert "error" in data
-    assert data["error"]["code"] == "not_implemented"
-    assert "message" in data["error"]
-
-
-def test_detect_objects_stub_returns_501() -> None:
-    response = client.post("/api/detect-objects")
-    assert response.status_code == 501
-    data = response.json()
-    assert "error" in data
-    assert data["error"]["code"] == "not_implemented"
-    assert "message" in data["error"]
-
-
 def test_contract_schemas_can_validate_contract_samples() -> None:
     # Contract sample for WeatherResponse
     weather_sample = {
