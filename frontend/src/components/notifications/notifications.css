@@ -1,0 +1,101 @@
+.nc-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.nc-section + .nc-section {
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+}
+
+.nc-section h3 {
+  color: var(--gold-bright);
+  font-size: var(--text-md);
+}
+
+.nc-section .button {
+  align-self: flex-start;
+}
+
+.nc-ok {
+  color: var(--live);
+}
+
+.nc-list,
+.nc-log {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nc-list li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.nc-item-head,
+.nc-item-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.nc-time {
+  flex: 1;
+}
+
+.nc-status {
+  flex-shrink: 0;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.nc-pending {
+  color: var(--gold-bright);
+}
+
+.nc-sent {
+  color: var(--live);
+}
+
+.nc-missed {
+  color: var(--paper-muted);
+}
+
+.nc-log li {
+  display: flex;
+  flex-direction: column;
+  font-size: var(--text-sm);
+}
+
+/* Bell badge in the navigation */
+.bell-button {
+  position: relative;
+}
+
+.bell-count {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: var(--radius-pill);
+  background: var(--vermilion);
+  color: var(--paper);
+  font-size: 0.65rem;
+  font-weight: 700;
+}

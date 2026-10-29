@@ -4,7 +4,7 @@ import { useToast } from '../ui/toastContext.js'
 import { API_BASE_URL, USE_MOCK } from '../../services/api.js'
 
 // Keys this app writes to localStorage (settings are kept).
-const SAVED_DATA_KEYS = ['tw-activity', 'tw-favorites', 'tw-reminders', 'tw-saved-events']
+const SAVED_DATA_KEYS = ['tw-activity', 'tw-favorites', 'tw-reminders', 'tw-saved-events', 'tw-notifications']
 
 export default function SettingsDialog({ open, onClose, settings, onChange }) {
   const toast = useToast()
