@@ -7,6 +7,7 @@ import LocationMap from '../components/LocationMap.jsx'
 import StatusBadge from '../components/StatusBadge.jsx'
 import WeatherCard from '../components/WeatherCard.jsx'
 import { useApiGet } from '../hooks/useApiGet.js'
+import { weatherPath } from '../lib/places.js'
 
 const GEO_ERRORS = {
   1: 'Location permission was denied.',
@@ -14,14 +15,9 @@ const GEO_ERRORS = {
   3: 'Finding your location took too long.',
 }
 
-function weatherPath(point) {
-  if (!point) return null
-  return `/api/weather?lat=${point.lat.toFixed(4)}&lon=${point.lon.toFixed(4)}`
-}
-
-export default function Watchtower() {
+// The selected place lives in App so the Dashboard can use it too.
+export default function Watchtower({ place: selected, onPlaceChange: setSelected }) {
   const locations = useApiGet('/api/locations')
-  const [selected, setSelected] = useState(null)
   const [geo, setGeo] = useState({ locating: false, error: null })
   // Changing the selection aborts any weather request still in flight.
   const weather = useApiGet(weatherPath(selected))
