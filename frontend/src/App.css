@@ -1,0 +1,15 @@
+.app {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.status {
+  font-family: var(--mono);
+}
+
+.status.offline {
+  color: #b3202a;
+  font-weight: bold;
+}
