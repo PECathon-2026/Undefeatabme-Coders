@@ -268,6 +268,10 @@
   font-size: var(--text-lg);
 }
 
+.metric-row .fine-print {
+  flex-basis: 100%;
+}
+
 .metric-skeleton {
   width: 60%;
   height: 28px;
@@ -462,6 +466,56 @@
 }
 
 /* Toggle switch (checkbox styled) */
+/* Segmented control (e.g. Map | List) */
+.segmented {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--panel-solid);
+}
+
+.segmented button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 36px;
+  padding: var(--space-1) var(--space-3);
+  border: none;
+  border-radius: calc(var(--radius) - 2px);
+  background: none;
+  color: var(--paper-muted);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+.segmented button[aria-pressed='true'] {
+  background: var(--vermilion);
+  color: var(--paper);
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon svg {
+  position: absolute;
+  left: var(--space-3);
+  color: var(--gold);
+  pointer-events: none;
+}
+
+.field .input-with-icon input[type='search'],
+.field .input-with-icon input[type='text'] {
+  width: 100%;
+  padding-left: 36px;
+}
+
 .switch {
   display: flex;
   justify-content: space-between;

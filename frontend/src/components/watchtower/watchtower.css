@@ -1,0 +1,136 @@
+/* Detail panel */
+.location-detail .card-title {
+  font-size: var(--text-xl);
+}
+
+.detail-coords {
+  color: var(--paper-muted);
+}
+
+.detail-distance {
+  color: var(--gold-bright);
+}
+
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.button.is-favorite {
+  border-color: var(--vermilion);
+  color: var(--vermilion-bright);
+}
+
+.detail-score {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.detail-score .status-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.detail-note {
+  text-align: center;
+}
+
+/* Results list */
+.location-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.location-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 64px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(6, 7, 11, 0.45);
+  color: var(--paper);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+
+.location-row:hover {
+  border-color: var(--gold);
+  box-shadow: var(--glow-gold);
+}
+
+.location-row.is-selected {
+  border-color: var(--vermilion);
+  background: linear-gradient(90deg, rgba(179, 32, 42, 0.2), rgba(6, 7, 11, 0.45));
+}
+
+.row-score {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  font-family: var(--serif);
+  font-size: var(--text-lg);
+}
+
+.row-poor,
+.row-unfavorable {
+  border-color: var(--vermilion-bright);
+}
+
+.row-none {
+  border-color: var(--line);
+  color: var(--paper-muted);
+}
+
+.row-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.row-name {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--serif);
+  font-size: var(--text-lg);
+}
+
+.row-fav {
+  color: var(--vermilion-bright);
+}
+
+.row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  color: var(--paper-muted);
+  font-size: var(--text-sm);
+}
+
+.score-details summary {
+  min-height: 32px;
+  color: var(--gold-bright);
+  cursor: pointer;
+}
+
+.score-details p {
+  margin-top: var(--space-2);
+}
