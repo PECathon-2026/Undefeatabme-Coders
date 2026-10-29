@@ -1,7 +1,28 @@
 """Threshold residuals to locate candidate sources in original pixel coordinates."""
 
+import os
+
 import cv2
 import numpy as np
+
+OPENCV_METHOD = "opencv-threshold-centroid"
+PHOTUTILS_METHOD = "photutils-daostarfinder"
+
+
+def detect_candidates(pixels: np.ndarray) -> tuple[list[dict], str, list[str]]:
+    """Select an optional detector without changing the fixed API schema."""
+    selection = os.environ.get("DETECT_BACKEND", "opencv").strip().lower()
+    notices = []
+    if selection == "photutils":
+        try:
+            from .detect_photutils import detect as detect_optional
+            sources = detect_optional(pixels.copy())
+            return sources, PHOTUTILS_METHOD, notices
+        except Exception:
+            notices.append("Optional Photutils detector unavailable or failed; used the OpenCV detector.")
+    elif selection != "opencv":
+        notices.append("Unknown DETECT_BACKEND; used the OpenCV detector.")
+    return detect(pixels), OPENCV_METHOD, notices
 
 
 def detect(pixels: np.ndarray) -> list[dict]:

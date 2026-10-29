@@ -6,7 +6,7 @@ from time import perf_counter
 
 from PIL import Image
 
-from .detect import detect
+from .detect import detect_candidates
 from .restore_baseline import restore
 from .validation import ImageValidationError, validate_image
 
@@ -44,7 +44,7 @@ def restore_image(data: bytes) -> dict:
 
 def detect_sources(data: bytes) -> dict:
     pixels, notices = validate_image(data)
-    sources = detect(pixels)
+    sources, method, detector_notices = detect_candidates(pixels)
     return {"image_width": int(pixels.shape[1]), "image_height": int(pixels.shape[0]),
-            "method": "opencv-threshold-centroid", "count": len(sources),
-            "sources": sources, "warnings": [DETECT_WARNING, *notices]}
+            "method": method, "count": len(sources),
+            "sources": sources, "warnings": [DETECT_WARNING, *notices, *detector_notices]}
