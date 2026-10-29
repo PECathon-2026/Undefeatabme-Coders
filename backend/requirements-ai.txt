@@ -1,0 +1,3 @@
+# Optional evaluation dependency; baseline requires none of this file.
+scipy==1.18.1
+# CPU torch/torchvision installation command and measured versions: ai/NOTES.md.
