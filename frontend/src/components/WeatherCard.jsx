@@ -3,27 +3,12 @@ import EmptyState from './EmptyState.jsx'
 import ErrorBox from './ErrorBox.jsx'
 import Loading from './Loading.jsx'
 import StatusBadge from './StatusBadge.jsx'
+import { formatDateTime } from '../lib/format.js'
 
 const NOT_AVAILABLE = 'not available'
 
 function formatPercent(value) {
   return value === null || value === undefined ? NOT_AVAILABLE : `${value}%`
-}
-
-function formatTimestamp(iso, timeZone) {
-  try {
-    return new Intl.DateTimeFormat('en-IN', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-      timeZone,
-      timeZoneName: 'short',
-    }).format(new Date(iso))
-  } catch {
-    return iso
-  }
 }
 
 // Weather and Night Honor Score for one place, from GET /api/weather.
@@ -49,7 +34,7 @@ export default function WeatherCard({ title = 'Night Honor Score', placeName, we
             <dt>Visibility</dt>
             <dd>{data.visibility_km === null ? NOT_AVAILABLE : `${data.visibility_km} km`}</dd>
             <dt>As of</dt>
-            <dd>{formatTimestamp(data.timestamp, data.timezone)}</dd>
+            <dd>{formatDateTime(data.timestamp, data.timezone)}</dd>
           </dl>
           <details className="score-details">
             <summary>How is this scored?</summary>

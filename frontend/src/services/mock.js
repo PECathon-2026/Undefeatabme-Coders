@@ -92,10 +92,21 @@ const POST_ROUTES = {
   '/api/detect-objects': mockDetect,
 }
 
-// Returns a fresh copy of the mock for a path (query string ignored), or undefined.
+// Filters the MOCK events by ?type= and echoes the query, like the real endpoint. Never adds events.
+function applyEventsQuery(data, params) {
+  const type = params.get('type') || 'all'
+  if (type !== 'all') data.events = data.events.filter((event) => event.type === type)
+  data.query.type = type
+  data.query.date = params.get('date') || data.query.date
+  return data
+}
+
+// Returns a fresh copy of the mock for a path, or undefined.
 export function findMock(method, path) {
-  const pathname = path.split('?')[0]
+  const [pathname, search = ''] = path.split('?')
   const routes = method === 'POST' ? POST_ROUTES : GET_ROUTES
   const data = routes[pathname]
-  return data === undefined ? undefined : structuredClone(data)
+  if (data === undefined) return undefined
+  const copy = structuredClone(data)
+  return pathname === '/api/events' ? applyEventsQuery(copy, new URLSearchParams(search)) : copy
 }
