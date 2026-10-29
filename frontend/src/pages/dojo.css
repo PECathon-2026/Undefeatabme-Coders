@@ -1,0 +1,68 @@
+.dojo-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-3) var(--space-5);
+  margin-bottom: var(--space-5);
+  padding: var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+}
+
+.dojo-filters .range-field {
+  flex: 0 1 280px;
+}
+
+.dojo-count {
+  flex-basis: 100%;
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.dojo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
+.dojo-note {
+  margin-top: var(--space-3);
+}
+
+.dojo-lists {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-5);
+  margin-top: var(--space-6);
+}
+
+.dojo-spectral {
+  margin-top: var(--space-5);
+}
+
+.activity-file {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reminder-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--gold-bright);
+  font-size: var(--text-xs);
+}
+
+@media (max-width: 1099px) {
+  .dojo-grid,
+  .dojo-lists {
+    grid-template-columns: 1fr;
+  }
+}
