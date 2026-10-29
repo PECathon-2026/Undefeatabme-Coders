@@ -7,7 +7,8 @@ from PIL import Image, UnidentifiedImageError
 
 MAX_BYTES = 10 * 1024 * 1024
 MAX_SIDE = 2048
-Image.MAX_IMAGE_PIXELS = MAX_SIDE * MAX_SIDE
+MAX_PIXELS = MAX_SIDE * MAX_SIDE
+Image.MAX_IMAGE_PIXELS = MAX_PIXELS * 2
 
 
 class ImageValidationError(ValueError):
@@ -19,6 +20,8 @@ class ImageValidationError(ValueError):
 
 
 def validate_image(data: bytes) -> tuple[np.ndarray, list[str]]:
+    if not isinstance(data, bytes):
+        raise ImageValidationError("invalid_image", "Image data must be bytes.")
     if len(data) > MAX_BYTES:
         raise ImageValidationError("file_too_large", "Image exceeds the 10 MB limit.")
     if data.startswith(b"SIMPLE  =") or data.startswith(b"XTENSION="):
@@ -28,7 +31,11 @@ def validate_image(data: bytes) -> tuple[np.ndarray, list[str]]:
         with Image.open(BytesIO(data)) as image:
             if image.format not in {"JPEG", "PNG"}:
                 raise ImageValidationError("unsupported_type", "Only JPEG and PNG are supported.")
-            if any(side < 32 or side > MAX_SIDE for side in image.size):
+            width, height = image.size
+            if (
+                any(side < 32 or side > MAX_SIDE for side in image.size)
+                or width * height > MAX_PIXELS
+            ):
                 raise ImageValidationError("image_too_large", "Each image side must be 32 to 2048 pixels.")
             image.verify()
         with Image.open(BytesIO(data)) as image:
@@ -54,6 +61,8 @@ def validate_image(data: bytes) -> tuple[np.ndarray, list[str]]:
         raise
     except Image.DecompressionBombError as exc:
         raise ImageValidationError("image_too_large", "Image exceeds the safe pixel limit.") from exc
+    except MemoryError as exc:
+        raise ImageValidationError("image_too_large", "Image exceeds the safe memory limit.") from exc
     except (UnidentifiedImageError, OSError, SyntaxError, ValueError) as exc:
         raise ImageValidationError("invalid_image", "File is not a valid JPEG or PNG image.") from exc
     return pixels, notices

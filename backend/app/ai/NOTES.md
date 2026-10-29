@@ -220,6 +220,53 @@ unconfirmed. GPU acceleration could only address speed. RL is also not promoted
 because the assumed PSF, noise amplification and visual changes do not justify
 replacing the baseline. Keep both methods available only in the local benchmark.
 
+## A4 input and runtime hardening
+
+The request path accepts only `bytes`, JPEG/PNG data up to 10 MiB, and decoded
+images with both sides between 32 and 2048 pixels (at most 4,194,304 pixels).
+Format and dimensions are checked from the image header before verification,
+full decode, or creation of pixel arrays. This bounds decoded input arrays to
+12 MiB for RGB (plus bounded processing intermediates); malformed data,
+decompression bombs, and allocation failures are rejected as
+`ImageValidationError` without writing uploaded data or temporary files.
+
+The service has a 30-second processing deadline checked after decode and after
+the image-processing/encoding stages. OpenCV and other native calls cannot be
+interrupted safely in-process, so this is a response deadline, not a hard kill
+of a running native operation. The fixed input bounds constrain their work;
+hard cancellation would require isolated worker processes.
+
+OpenCV processing and PNG encoding failures surface as clear `RuntimeError`
+messages for the API layer to log and map to its standard internal-error
+response. An optional model failure still falls back to the baseline and adds
+the exact warning below. Original validation errors retain their stable
+`ImageValidationError.code` values.
+
+Normal baseline restore and detection need only
+`backend/requirements.txt`; SciPy, Astropy, Photutils, torch, and torchvision
+are optional. The AI tests exercise both operations in a fresh interpreter
+where all of those optional imports are blocked. To reproduce the environment:
+
+```powershell
+python -m pip install -r backend/requirements.txt
+python -m pytest -p no:cacheprovider backend/app/ai
+```
+
+The request services operate in memory. `benchmark.py` is a separate
+evaluation tool and writes comparison artifacts only to a new directory under
+the ignored `backend/app/ai/outputs/` tree.
+
+Exact service warning strings:
+
+- `Restored image is an algorithmic enhancement, not new data. Features may be artefacts.`
+- `Detections are candidates, not confirmed astronomical objects.`
+- `16-bit PNG converted to 8-bit for baseline processing; precision is reduced. Original bytes are unchanged.`
+- `Transparency composited on black for baseline processing.`
+- `Optional model unavailable or not qualified; used the OpenCV baseline.`
+- `Unknown RESTORE_BACKEND; used the OpenCV baseline.`
+- `Optional Photutils detector unavailable or failed; used the OpenCV detector.`
+- `Unknown DETECT_BACKEND; used the OpenCV detector.`
+
 ## A3 source-detection comparison
 
 The optional `photutils-daostarfinder` backend uses sigma-clipped background

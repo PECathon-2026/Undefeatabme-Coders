@@ -6,10 +6,11 @@ import numpy as np
 import pytest
 from PIL import Image
 
+from backend.app.ai import service
 from backend.app.ai.service import (
     DETECT_WARNING, RESTORE_WARNING, ImageValidationError, detect_sources, restore_image,
 )
-from backend.app.ai.validation import MAX_BYTES, validate_image
+from backend.app.ai.validation import MAX_BYTES, MAX_PIXELS, MAX_SIDE, validate_image
 
 
 def encode(array, fmt="PNG"):
@@ -77,6 +78,28 @@ def test_invalid_uploads(service, data, code):
     assert error.value.code == code
 
 
+@pytest.mark.parametrize("operation", [restore_image, detect_sources])
+def test_processing_deadline_is_reported(monkeypatch, stars, operation):
+    monkeypatch.setattr(service, "MAX_PROCESSING_SECONDS", 0)
+    with pytest.raises(RuntimeError, match="30-second limit"):
+        operation(encode(stars[0]))
+
+
+def test_opencv_failures_have_clear_service_errors(monkeypatch, stars):
+    import cv2
+
+    def fail(_):
+        raise cv2.error("OpenCV failure")
+
+    monkeypatch.setattr(service, "restore", fail)
+    with pytest.raises(RuntimeError, match="OpenCV restoration failed"):
+        restore_image(encode(stars[0]))
+
+    monkeypatch.setattr(service, "detect_candidates", fail)
+    with pytest.raises(RuntimeError, match="OpenCV source detection failed"):
+        detect_sources(encode(stars[0]))
+
+
 @pytest.mark.parametrize("service", [restore_image, detect_sources])
 @pytest.mark.parametrize("shape", [(31, 64), (64, 31), (2049, 32), (32, 2049)])
 def test_dimension_limits(service, shape):
@@ -106,6 +129,61 @@ def test_decompression_bomb_header():
     with pytest.raises(ImageValidationError) as error:
         detect_sources(bytes(data))
     assert error.value.code == "image_too_large"
+
+
+def test_oversized_header_is_rejected_before_verification(monkeypatch):
+    class HeaderOnlyImage:
+        format = "PNG"
+        size = (MAX_SIDE + 1, 32)
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_):
+            return False
+
+        def verify(self):
+            pytest.fail("Oversized image header reached verification")
+
+    monkeypatch.setattr(Image, "open", lambda _: HeaderOnlyImage())
+    with pytest.raises(ImageValidationError) as error:
+        validate_image(b"header")
+    assert error.value.code == "image_too_large"
+    assert MAX_PIXELS == MAX_SIDE * MAX_SIDE
+
+
+def test_baseline_runs_without_optional_ai_packages():
+    import subprocess
+    import sys
+
+    script = '''
+import os
+import sys
+from io import BytesIO
+import numpy as np
+from PIL import Image
+class BlockOptional:
+    def find_spec(self, fullname, *args):
+        if fullname.split('.')[0] in {'photutils', 'astropy', 'scipy', 'torch', 'torchvision'}:
+            raise ImportError('Optional package deliberately blocked')
+sys.meta_path.insert(0, BlockOptional())
+from backend.app.ai.service import detect_sources, restore_image
+stream = BytesIO()
+Image.fromarray(np.full((32, 32), 80, np.uint8)).save(stream, format='PNG')
+os.environ['RESTORE_BACKEND'] = 'baseline'
+os.environ['DETECT_BACKEND'] = 'opencv'
+assert restore_image(stream.getvalue())['model_name'] == 'opencv-nlmeans-unsharp-baseline'
+assert detect_sources(stream.getvalue())['method'] == 'opencv-threshold-centroid'
+'''
+    result = subprocess.run([sys.executable, "-c", script], capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize("data", [None, "not bytes", bytearray(b"not bytes")])
+def test_non_bytes_upload_is_rejected(data):
+    with pytest.raises(ImageValidationError) as error:
+        validate_image(data)
+    assert error.value.code == "invalid_image"
 
 
 def test_sixteen_bit_scaling():
