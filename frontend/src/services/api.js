@@ -15,10 +15,16 @@ function apiError(code, message) {
 
 const abortedError = () => apiError('aborted', 'Request was cancelled.')
 
-async function mockRequest(method, path, signal) {
+async function mockRequest(method, path, signal, file) {
   await new Promise((resolve) => setTimeout(resolve, MOCK_DELAY_MS))
   if (signal?.aborted) throw abortedError()
-  const data = findMock(method, path)
+  let data
+  try {
+    data = await findMock(method, path, file)
+  } catch {
+    throw apiError('invalid_image', 'File is not a valid JPEG or PNG image.')
+  }
+  if (signal?.aborted) throw abortedError()
   if (data === undefined) {
     throw apiError('not_found', `No MOCK data for ${method} ${path}.`)
   }
@@ -26,7 +32,7 @@ async function mockRequest(method, path, signal) {
 }
 
 async function request(path, options) {
-  if (USE_MOCK) return mockRequest(options.method, path, options.signal)
+  if (USE_MOCK) return mockRequest(options.method, path, options.signal, options.body?.get?.('file'))
 
   let response
   try {

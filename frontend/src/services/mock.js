@@ -101,12 +101,46 @@ function applyEventsQuery(data, params) {
   return data
 }
 
-// Returns a fresh copy of the mock for a path, or undefined.
-export function findMock(method, path) {
+function fileToDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = () => reject(reader.error)
+    reader.readAsDataURL(file)
+  })
+}
+
+// MOCK restore returns the uploaded image unchanged, at its real size.
+async function restoreFromFile(data, file) {
+  const bitmap = await createImageBitmap(file)
+  data.restored_image = await fileToDataUrl(file)
+  data.width = bitmap.width
+  data.height = bitmap.height
+  bitmap.close()
+  return data
+}
+
+// MOCK detect rescales the sample sources (defined on 1024x768) to the uploaded image.
+async function detectFromFile(data, file) {
+  const bitmap = await createImageBitmap(file)
+  const sx = bitmap.width / data.image_width
+  const sy = bitmap.height / data.image_height
+  data.sources = data.sources.map((s) => ({ ...s, x: s.x * sx, y: s.y * sy }))
+  data.image_width = bitmap.width
+  data.image_height = bitmap.height
+  bitmap.close()
+  return data
+}
+
+// Returns a fresh copy of the mock for a request, or undefined.
+export async function findMock(method, path, file) {
   const [pathname, search = ''] = path.split('?')
   const routes = method === 'POST' ? POST_ROUTES : GET_ROUTES
   const data = routes[pathname]
   if (data === undefined) return undefined
   const copy = structuredClone(data)
-  return pathname === '/api/events' ? applyEventsQuery(copy, new URLSearchParams(search)) : copy
+  if (pathname === '/api/events') return applyEventsQuery(copy, new URLSearchParams(search))
+  if (file && pathname === '/api/restore') return restoreFromFile(copy, file)
+  if (file && pathname === '/api/detect-objects') return detectFromFile(copy, file)
+  return copy
 }
