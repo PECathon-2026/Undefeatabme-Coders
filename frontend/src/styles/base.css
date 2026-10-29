@@ -1,0 +1,241 @@
+:root {
+  color-scheme: dark;
+  font: 16px/1.55 var(--sans);
+  color: var(--paper);
+  background: var(--obsidian);
+  -webkit-font-smoothing: antialiased;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--obsidian);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--gold-bright);
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--radius-sm);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: fixed;
+  left: var(--space-2);
+  top: -64px;
+  z-index: var(--z-toast);
+  padding: var(--space-2) var(--space-3);
+  background: var(--gold);
+  color: var(--obsidian);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: var(--space-2);
+}
+
+/* Buttons: primary (vermilion), secondary (gold outline), ghost, danger, icon */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--gold-bright);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.button:hover:not(:disabled) {
+  border-color: var(--gold);
+  background: rgba(201, 164, 92, 0.1);
+  box-shadow: var(--glow-gold);
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button svg {
+  flex-shrink: 0;
+}
+
+.button-primary {
+  border-color: var(--vermilion);
+  background: var(--vermilion);
+  color: var(--paper);
+}
+
+.button-primary:hover:not(:disabled) {
+  border-color: #cf2f39;
+  background: #cf2f39;
+  box-shadow: 0 0 20px rgba(179, 32, 42, 0.45);
+}
+
+.button-ghost {
+  border-color: transparent;
+  color: var(--paper);
+}
+
+.button-danger {
+  border-color: var(--vermilion-bright);
+  color: var(--vermilion-bright);
+}
+
+.button-small {
+  min-height: 36px;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.icon-button {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--paper);
+  cursor: pointer;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+.icon-button:hover {
+  border-color: var(--line);
+  background: rgba(201, 164, 92, 0.08);
+}
+
+.link-button {
+  padding: var(--space-1) 0;
+  border: none;
+  background: none;
+  color: var(--paper);
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.link-button[aria-pressed='true'] {
+  color: var(--gold-bright);
+}
+
+/* Form fields */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  color: var(--paper-muted);
+  font-size: var(--text-sm);
+}
+
+.field select,
+.field input:not([type='range']):not([type='checkbox']) {
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel-solid);
+  color: var(--paper);
+  font: inherit;
+  font-size: var(--text-md);
+}
+
+.field select:hover,
+.field input:hover {
+  border-color: var(--gold);
+}
+
+input[type='range'] {
+  min-height: 32px;
+  accent-color: var(--vermilion);
+}
+
+.mono {
+  font-family: var(--mono);
+  font-size: 0.9em;
+}
+
+.fine-print {
+  color: var(--paper-muted);
+  font-size: var(--text-xs);
+}
+
+/* Reduced motion: system preference or the in-app setting */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}

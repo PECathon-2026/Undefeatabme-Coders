@@ -1,0 +1,63 @@
+.science-notice {
+  margin-bottom: var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--vermilion);
+  border-left-width: 6px;
+  border-radius: var(--radius-sm);
+  background: rgba(179, 32, 42, 0.15);
+  font-weight: 600;
+}
+
+.file-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  color: var(--paper-muted);
+  font-size: var(--text-sm);
+}
+
+.file-field input {
+  min-height: 44px;
+  padding: var(--space-2);
+  border: 1px dashed var(--gold);
+  border-radius: var(--radius);
+  background: var(--obsidian);
+  color: var(--paper);
+  font: inherit;
+}
+
+.file-field input::file-selector-button {
+  margin-right: var(--space-3);
+  padding: 6px 14px;
+  border: 1px solid var(--gold);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--gold-bright);
+  font: inherit;
+  cursor: pointer;
+}
+
+.preview img {
+  display: block;
+  max-width: 100%;
+  max-height: 240px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.preview p {
+  margin-top: var(--space-2);
+}
+
+.action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.lens-results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  margin-top: var(--space-5);
+}

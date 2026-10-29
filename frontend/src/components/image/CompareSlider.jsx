@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import './image.css'
 
 // Before/after comparison: two stacked images, the top one clipped with clip-path.
 // A range input drives the divider so it works with keyboard, mouse and touch.

@@ -1,3 +1,5 @@
+import './ui.css'
+
 export default function Loading({ label = 'Loading...' }) {
   return (
     <p className="loading" role="status">

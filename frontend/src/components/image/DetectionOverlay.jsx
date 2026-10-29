@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import './image.css'
 
 // Draws candidate sources as SVG circles over the image.
 // Source coordinates are in original pixels, so they are scaled by displayedWidth / image_width.

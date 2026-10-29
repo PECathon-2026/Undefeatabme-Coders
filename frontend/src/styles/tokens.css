@@ -1,0 +1,87 @@
+/* Design tokens for Tsukuyomi Watch. Every colour, size and duration comes from here. */
+:root {
+  /* Night palette */
+  --obsidian: #06070b;
+  --navy: #0a0f1f;
+  --charcoal: #14151c;
+  --indigo: #2e3a6e;
+
+  /* Accents */
+  --vermilion: #b3202a;
+  --vermilion-bright: #e0524a; /* for small text on dark backgrounds (contrast) */
+  --gold: #c9a45c;
+  --gold-bright: #e2c47f;
+  --silver: #c8ccd8;
+  --paper: #ece6d6;
+  --paper-muted: #a9a59c;
+  --live: #7fd18b;
+
+  /* Surfaces */
+  --panel: rgba(14, 16, 26, 0.8);
+  --panel-raised: rgba(24, 26, 40, 0.9);
+  --panel-solid: #10121b;
+  --line: rgba(201, 164, 92, 0.22);
+  --line-strong: rgba(201, 164, 92, 0.55);
+  --glass-blur: 6px;
+
+  /* Aliases kept from v1 so older rules keep working */
+  --ink: var(--obsidian);
+  --red: var(--vermilion);
+
+  /* Typography */
+  --serif: 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', 'Cormorant Garamond', Georgia, serif;
+  --sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.75rem;
+  --text-2xl: 2.5rem;
+  --text-hero: clamp(2.2rem, 6vw, 4.2rem);
+
+  /* Spacing (4px scale) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
+  /* Shadows and glows */
+  --shadow-panel: 0 12px 32px rgba(0, 0, 0, 0.45);
+  --shadow-lift: 0 18px 40px rgba(0, 0, 0, 0.55);
+  --glow-gold: 0 0 0 1px rgba(201, 164, 92, 0.4), 0 0 18px rgba(201, 164, 92, 0.18);
+  --glow-moon: 0 0 60px rgba(236, 230, 214, 0.35);
+
+  /* Motion */
+  --dur-fast: 120ms;
+  --dur: 220ms;
+  --dur-slow: 420ms;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* Focus ring */
+  --focus-ring: 0 0 0 2px var(--obsidian), 0 0 0 4px var(--gold-bright);
+
+  /* Layers */
+  --z-bg: 0;
+  --z-content: 1;
+  --z-nav: 20;
+  --z-drawer: 30;
+  --z-dialog: 40;
+  --z-toast: 50;
+
+  /* Layout */
+  --sidebar-width: 248px;
+  --sidebar-collapsed: 76px;
+  --topbar-height: 56px;
+  --bottomnav-height: 64px;
+}

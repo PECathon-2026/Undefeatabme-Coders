@@ -1,0 +1,38 @@
+.map-frame {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.map {
+  height: 420px;
+  width: 100%;
+  background: var(--obsidian);
+}
+
+/* Ink-wash look for the OSM tiles; attribution and markers keep their colours. */
+.map .leaflet-tile-pane {
+  filter: grayscale(1) invert(1) brightness(0.85) contrast(0.9);
+}
+
+.map .leaflet-control-attribution {
+  background: rgba(236, 230, 214, 0.9);
+  color: #222;
+}
+
+.map .leaflet-control-attribution a {
+  color: #0b4f8a;
+}
+
+.map .leaflet-popup-content-wrapper,
+.map .leaflet-popup-tip {
+  background: var(--panel-solid);
+  color: var(--paper);
+  border: 1px solid var(--gold);
+}
+
+.map .leaflet-bar a {
+  background: var(--panel-solid);
+  color: var(--paper);
+  border-color: var(--line);
+}

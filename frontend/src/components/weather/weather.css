@@ -1,0 +1,14 @@
+.weather-place {
+  font-family: var(--serif);
+  font-size: var(--text-lg);
+}
+
+.score-details summary {
+  min-height: 32px;
+  color: var(--gold-bright);
+  cursor: pointer;
+}
+
+.score-details p {
+  margin-top: var(--space-2);
+}

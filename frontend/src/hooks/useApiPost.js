@@ -4,7 +4,7 @@ import { apiPostFile } from '../services/api.js'
 const IDLE = { data: null, error: null, loading: false, startedAt: null }
 
 // Uploads a file with apiPostFile. Tracks loading, error, data and elapsed time.
-// A new run() or reset() aborts the request still in flight.
+// A new run() or reset() aborts the request still in flight. run() resolves to the data, or null.
 export function useApiPost() {
   const [state, setState] = useState(IDLE)
   const [now, setNow] = useState(0)
@@ -28,8 +28,10 @@ export function useApiPost() {
     try {
       const data = await apiPostFile(path, file, { signal: controller.signal })
       setState({ data, error: null, loading: false, startedAt })
+      return data
     } catch (err) {
       if (!controller.signal.aborted) setState({ data: null, error: err.error, loading: false, startedAt })
+      return null
     }
   }, [])
 

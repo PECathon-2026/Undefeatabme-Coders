@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import Card from '../components/Card.jsx'
-import EmptyState from '../components/EmptyState.jsx'
-import ErrorBox from '../components/ErrorBox.jsx'
-import Loading from '../components/Loading.jsx'
-import StatusBadge from '../components/StatusBadge.jsx'
+import Card from '../components/ui/Card.jsx'
+import EmptyState from '../components/ui/EmptyState.jsx'
+import ErrorBox from '../components/ui/ErrorBox.jsx'
+import Loading from '../components/ui/Loading.jsx'
+import StatusBadge from '../components/ui/StatusBadge.jsx'
 import { useApiGet } from '../hooks/useApiGet.js'
 import { formatDateTime, todayIn } from '../lib/format.js'
+import './scroll.css'
 
 // Event types from docs/api-contracts.md, with a decorative symbol for each.
 const EVENT_TYPES = [
@@ -69,7 +70,6 @@ export default function CelestialScroll() {
 
   return (
     <>
-      <p className="section-intro">Upcoming moon phases, meteor showers, eclipses and launches.</p>
 
       <form className="filters" onSubmit={(e) => e.preventDefault()} aria-label="Event filters">
         <label className="field">
@@ -89,7 +89,7 @@ export default function CelestialScroll() {
       </form>
 
       {data?.warnings?.length > 0 && (
-        <div className="notice-bar" role="status">
+        <div className="notice-bar scroll-notice" role="status">
           <ul>
             {data.warnings.map((warning) => (
               <li key={warning}>{warning}</li>

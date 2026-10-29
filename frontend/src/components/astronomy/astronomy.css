@@ -1,0 +1,99 @@
+/* Moon */
+.moon-phase {
+  display: block;
+  flex-shrink: 0;
+}
+
+.moon-glow {
+  filter: drop-shadow(0 0 18px rgba(236, 230, 214, 0.35));
+}
+
+.moon-dark {
+  fill: #1a1c26;
+  stroke: rgba(200, 204, 216, 0.18);
+  stroke-width: 0.6;
+}
+
+.moon-maria {
+  fill: #7d7868;
+  opacity: 0.22;
+}
+
+/* Score gauge */
+.gauge {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.gauge svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.gauge-track,
+.gauge-value {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+
+.gauge-track {
+  stroke: rgba(201, 164, 92, 0.15);
+}
+
+.gauge-value {
+  stroke: var(--gold);
+  filter: drop-shadow(0 0 6px rgba(201, 164, 92, 0.5));
+  transition: stroke-dasharray var(--dur-slow) var(--ease);
+}
+
+.gauge-excellent .gauge-value,
+.gauge-good .gauge-value {
+  stroke: var(--gold-bright);
+}
+
+.gauge-poor .gauge-value,
+.gauge-unfavorable .gauge-value {
+  stroke: var(--vermilion-bright);
+  filter: drop-shadow(0 0 6px rgba(224, 82, 74, 0.5));
+}
+
+.gauge-tick {
+  stroke: var(--paper-muted);
+  stroke-width: 1;
+  opacity: 0.6;
+}
+
+.gauge-number {
+  fill: var(--paper);
+  font-family: var(--serif);
+  font-size: 30px;
+}
+
+.gauge-max {
+  fill: var(--paper-muted);
+  font-family: var(--sans);
+  font-size: 9px;
+}
+
+.gauge-band {
+  margin-top: calc(-1 * var(--space-4));
+  color: var(--gold-bright);
+  font-family: var(--serif);
+  font-size: var(--text-lg);
+  letter-spacing: 0.04em;
+}
+
+.gauge-poor .gauge-band,
+.gauge-unfavorable .gauge-band {
+  color: var(--vermilion-bright);
+}
+
+.gauge-none .gauge-band {
+  color: var(--paper-muted);
+  font-family: var(--sans);
+  font-size: var(--text-sm);
+  font-style: italic;
+}
