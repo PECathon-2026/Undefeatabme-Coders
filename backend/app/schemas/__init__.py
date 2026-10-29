@@ -1,1 +1,31 @@
+from backend.app.schemas.contracts import (
+    CandidateSource,
+    DetectSourcesResponse,
+    ErrorDetail,
+    ErrorResponse,
+    EventItem,
+    EventsQuery,
+    EventsResponse,
+    HealthResponse,
+    LocationCoords,
+    LocationItem,
+    LocationsResponse,
+    RestoreResponse,
+    WeatherResponse,
+)
 
+__all__ = [
+    "CandidateSource",
+    "DetectSourcesResponse",
+    "ErrorDetail",
+    "ErrorResponse",
+    "EventItem",
+    "EventsQuery",
+    "EventsResponse",
+    "HealthResponse",
+    "LocationCoords",
+    "LocationItem",
+    "LocationsResponse",
+    "RestoreResponse",
+    "WeatherResponse",
+]

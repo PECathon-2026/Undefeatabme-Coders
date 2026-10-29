@@ -2,6 +2,13 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app.errors import register_error_handlers
+from backend.app.routes import (
+    events_router,
+    image_router,
+    locations_router,
+    weather_router,
+)
+from backend.app.schemas import HealthResponse
 
 app = FastAPI(title="Tsukuyomi Watch")
 
@@ -20,8 +27,13 @@ app.add_middleware(
 
 register_error_handlers(app)
 
+# Include routers
+app.include_router(weather_router)
+app.include_router(locations_router)
+app.include_router(events_router)
+app.include_router(image_router)
 
-@app.get("/api/health")
-def get_health() -> dict[str, str]:
-    return {"status": "ok"}
 
+@app.get("/api/health", response_model=HealthResponse, tags=["health"])
+def get_health() -> HealthResponse:
+    return HealthResponse(status="ok")
