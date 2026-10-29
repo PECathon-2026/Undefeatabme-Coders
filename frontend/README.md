@@ -52,6 +52,47 @@ npm run preview         # serve the built files locally
 npm run lint            # oxlint
 ```
 
+## Deploy (done by a human; AI assistants never deploy)
+
+The frontend is a static site. Deploy the backend first so you know its public HTTPS URL.
+
+**Vercel**
+
+| Setting | Value |
+|---|---|
+| Framework preset | Vite |
+| Root Directory | `frontend` |
+| Install Command | `npm ci` |
+| Build Command | `npm run build` |
+| Output Directory | `dist` |
+| Environment variable | `VITE_API_BASE_URL` = `https://<your-backend-host>` (no trailing slash) |
+| Node.js version | 22.x |
+
+**Netlify**
+
+| Setting | Value |
+|---|---|
+| Base directory | `frontend` |
+| Build command | `npm run build` |
+| Publish directory | `dist` (relative to the base directory; the UI shows `frontend/dist`) |
+| Environment variables | `VITE_API_BASE_URL` = `https://<your-backend-host>`, `NODE_VERSION` = `22` |
+
+Things that matter:
+
+- **`VITE_API_BASE_URL` is baked in at build time.** If it is missing, the app calls `/api/...` on
+  its own domain and every card shows an error. After changing it, trigger a new deploy (rebuild);
+  changing it alone does nothing to the existing build.
+- Leave `VITE_USE_MOCK` unset (or `false`) in production so real data is shown.
+- Use the backend's **https** URL; browsers block http API calls from an https page.
+- Then set the backend's `CORS_ORIGINS` to the deployed frontend URL (e.g. `https://tsukuyomi-watch.vercel.app`,
+  no trailing slash) and redeploy the backend.
+- No rewrite rules are needed: the app has no client-side routes.
+- Free backend tiers sleep; the first request after a while can take 30+ seconds, so open the
+  site once before a demo.
+
+After deploying, check: the Dashboard shows `Backend status: ok` with a LIVE badge, the Night Honor
+Score shows LIVE, and the browser console has no CORS errors.
+
 ## Demo path
 
 1. **Dojo Dashboard** (landing): backend health, Night Honor Score for the chosen location, next 3 events, shortcut to Spirit Lens
