@@ -268,7 +268,7 @@ function BestSpotCard({ onNavigate, onPlaceChange }) {
   const loading = locations.loading || scores.loading
 
   function viewBest() {
-    onPlaceChange({ lat: best.location.lat, lon: best.location.lon, name: best.location.name })
+    onPlaceChange({ id: best.location.id, lat: best.location.lat, lon: best.location.lon, name: best.location.name })
     onNavigate('watchtower')
   }
 

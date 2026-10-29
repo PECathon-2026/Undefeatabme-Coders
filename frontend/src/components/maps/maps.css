@@ -36,3 +36,106 @@
   color: var(--paper);
   border-color: var(--line);
 }
+
+.map-frame {
+  position: relative;
+}
+
+.map-fallback {
+  position: absolute;
+  inset: auto var(--space-3) var(--space-3);
+  z-index: 500;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--panel-solid);
+  font-size: var(--text-sm);
+}
+
+/* Custom pins */
+.tw-pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: none;
+  border: none;
+}
+
+.tw-pin-head {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--gold);
+  border-radius: 50% 50% 50% 0;
+  background: var(--vermilion);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.6);
+  transform: rotate(-45deg);
+  transition: transform var(--dur) var(--ease);
+}
+
+.tw-pin-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--paper);
+}
+
+.tw-pin-tail {
+  display: none;
+}
+
+.tw-pin:hover .tw-pin-head,
+.tw-pin:focus-visible .tw-pin-head {
+  transform: rotate(-45deg) scale(1.1);
+}
+
+.tw-pin.is-selected .tw-pin-head {
+  width: 36px;
+  height: 36px;
+  border-color: var(--gold-bright);
+  box-shadow: 0 0 0 4px rgba(201, 164, 92, 0.35), 0 0 18px rgba(226, 196, 127, 0.8);
+}
+
+.tw-pin:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.tw-pin:focus-visible .tw-pin-head {
+  box-shadow: var(--focus-ring);
+}
+
+.tw-user {
+  position: relative;
+  background: none;
+  border: none;
+}
+
+.tw-user-dot {
+  position: absolute;
+  inset: 5px;
+  border: 2px solid var(--obsidian);
+  border-radius: 50%;
+  background: var(--silver);
+  box-shadow: 0 0 10px rgba(200, 204, 216, 0.9);
+}
+
+.tw-user-pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(200, 204, 216, 0.35);
+  animation: user-pulse 2s ease-out infinite;
+}
+
+@keyframes user-pulse {
+  from {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
