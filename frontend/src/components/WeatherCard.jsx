@@ -12,7 +12,7 @@ function formatPercent(value) {
 }
 
 // Weather and Night Honor Score for one place, from GET /api/weather.
-export default function WeatherCard({ title = 'Night Honor Score', placeName, weather, emptyMessage }) {
+export default function WeatherCard({ title = 'Night Honor Score', placeName, weather, emptyMessage, children }) {
   const { data, error, loading, retry } = weather
   return (
     <Card title={title} badge={data && <StatusBadge dataKind={data.data_kind} />}>
@@ -43,6 +43,7 @@ export default function WeatherCard({ title = 'Night Honor Score', placeName, we
           <p className="fine-print">{data.attribution}</p>
         </>
       )}
+      {children}
     </Card>
   )
 }

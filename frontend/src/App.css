@@ -704,3 +704,49 @@
   color: var(--gold);
   font-weight: 600;
 }
+
+/* Dojo Dashboard */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.dashboard-grid .button {
+  align-self: flex-start;
+}
+
+.button-primary {
+  border-color: var(--red);
+  background: var(--red);
+  color: var(--paper);
+}
+
+.button-primary:hover {
+  background: #c92a35;
+}
+
+.health {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+}
+
+.health-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--paper-muted);
+}
+
+.health-dot.health-ok {
+  background: #7fd18b;
+  box-shadow: 0 0 8px rgba(127, 209, 139, 0.6);
+}

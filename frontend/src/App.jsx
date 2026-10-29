@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import MoonMotif from './components/MoonMotif.jsx'
 import NavBar from './components/NavBar.jsx'
 import CelestialScroll from './sections/CelestialScroll.jsx'
@@ -17,8 +17,24 @@ const SECTIONS = [
 
 function App() {
   const [current, setCurrent] = useState(SECTIONS[0].id)
+  // Location chosen in Watchtower; the Dashboard uses it too. null = default location.
+  const [place, setPlace] = useState(null)
+  const mainRef = useRef(null)
+  const focusMain = useRef(false)
   const section = SECTIONS.find((s) => s.id === current)
   const { Component } = section
+
+  // Shortcut buttons inside a section unmount when it changes, so move focus to the new content.
+  function navigate(id) {
+    focusMain.current = true
+    setCurrent(id)
+  }
+
+  useEffect(() => {
+    if (!focusMain.current) return
+    focusMain.current = false
+    mainRef.current?.focus()
+  }, [current])
 
   return (
     <div className="app">
@@ -41,11 +57,11 @@ function App() {
         <NavBar sections={SECTIONS} current={current} onSelect={setCurrent} />
       </header>
 
-      <main id="main" className="site-main" tabIndex={-1}>
+      <main id="main" className="site-main" tabIndex={-1} ref={mainRef}>
         <h2 className="section-title">
           <span aria-hidden="true">{section.kanji}</span> {section.label}
         </h2>
-        <Component />
+        <Component place={place} onPlaceChange={setPlace} onNavigate={navigate} />
       </main>
 
       <footer className="site-footer">
