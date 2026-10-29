@@ -1,21 +1,24 @@
 import { ChartColumn, MoonStar, ScanEye, ScrollText, Telescope } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import Atmosphere from './components/layout/Atmosphere.jsx'
 import Navigation from './components/layout/Navigation.jsx'
 import SettingsDialog from './components/layout/SettingsDialog.jsx'
 import NotificationCenter from './components/notifications/NotificationCenter.jsx'
+import Skeleton from './components/ui/Skeleton.jsx'
 import { ToastProvider } from './components/ui/Toast.jsx'
 import { useApiGet } from './hooks/useApiGet.js'
 import { useHashRoute } from './hooks/useHashRoute.js'
 import { useReminderScheduler } from './hooks/useReminderScheduler.js'
 import { usePersistentState } from './hooks/usePersistentState.js'
-import CelestialScroll from './pages/CelestialScroll.jsx'
-import Dojo from './pages/Dojo.jsx'
 import Observatory from './pages/Observatory.jsx'
-import SpiritLens from './pages/SpiritLens.jsx'
-import Watchtower from './pages/Watchtower.jsx'
 import { USE_MOCK } from './services/api.js'
 import './components/layout/layout.css'
+
+// Pages other than the home page load on first visit, so heavy code (e.g. Leaflet) stays out of the first download.
+const Watchtower = lazy(() => import('./pages/Watchtower.jsx'))
+const CelestialScroll = lazy(() => import('./pages/CelestialScroll.jsx'))
+const SpiritLens = lazy(() => import('./pages/SpiritLens.jsx'))
+const Dojo = lazy(() => import('./pages/Dojo.jsx'))
 
 const PAGES = [
   {
@@ -139,7 +142,9 @@ function AppShell() {
                 </div>
               </header>
             )}
-            <Component place={place} onPlaceChange={setPlace} onNavigate={navigate} health={health} />
+            <Suspense fallback={<Skeleton lines={6} label={`Loading ${page.label}`} />}>
+              <Component place={place} onPlaceChange={setPlace} onNavigate={navigate} health={health} />
+            </Suspense>
           </div>
         </main>
         <footer className="site-footer">

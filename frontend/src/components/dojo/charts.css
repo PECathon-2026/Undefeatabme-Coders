@@ -1,0 +1,142 @@
+.chart {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+.chart-svg {
+  display: block;
+  overflow: visible;
+}
+
+.chart-svg:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--radius-sm);
+}
+
+.chart-grid {
+  stroke: var(--chart-grid);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.chart-axis {
+  stroke: var(--chart-axis);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.chart-tick {
+  fill: var(--paper-muted);
+  font-family: var(--sans);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.chart-axis-label {
+  fill: var(--paper-muted);
+  font-family: var(--sans);
+  font-size: 12px;
+}
+
+.chart-plot-bg {
+  fill: rgba(6, 7, 11, 0.5);
+}
+
+/* Bars */
+.chart-hit {
+  fill: transparent;
+}
+
+.chart-bar {
+  cursor: pointer;
+  outline: none;
+}
+
+.chart-bar-mark {
+  fill: var(--chart-mark);
+  transition: d var(--dur-slow) var(--ease), fill var(--dur) var(--ease), opacity var(--dur) var(--ease);
+}
+
+.chart-bar.is-hover .chart-bar-mark {
+  fill: var(--chart-mark-hover);
+}
+
+.chart-bar.is-dimmed .chart-bar-mark {
+  opacity: 0.3;
+}
+
+.chart-bar.is-selected .chart-bar-mark {
+  fill: var(--chart-mark-hover);
+  stroke: var(--paper);
+  stroke-width: 2;
+}
+
+.chart-bar:focus-visible .chart-hit {
+  stroke: var(--gold-bright);
+  stroke-width: 2;
+}
+
+/* Dots: 2px ring in the surface colour keeps overlapping points legible */
+.chart-scatter {
+  cursor: crosshair;
+}
+
+.chart-dot {
+  fill: var(--chart-mark);
+  stroke: var(--panel-solid);
+  stroke-width: 2;
+  transition: opacity var(--dur) var(--ease), r var(--dur) var(--ease);
+}
+
+.chart-dot.is-dimmed {
+  opacity: 0.18;
+}
+
+.chart-dot.is-hover {
+  fill: var(--chart-mark-hover);
+}
+
+.chart-dot.is-selected {
+  fill: var(--chart-mark-hover);
+  stroke: var(--paper);
+  stroke-width: 2.5;
+}
+
+/* Tooltip: value first and strong, label secondary */
+.chart-tooltip {
+  position: absolute;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  max-width: 260px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--panel-solid);
+  box-shadow: var(--shadow-lift);
+  font-size: var(--text-xs);
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+}
+
+.chart-tooltip strong {
+  color: var(--paper);
+  font-size: var(--text-md);
+}
+
+.chart-tooltip span {
+  color: var(--paper-muted);
+}
+
+.chart-table summary {
+  min-height: 32px;
+  color: var(--gold-bright);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.chart-table table {
+  margin-top: var(--space-2);
+}

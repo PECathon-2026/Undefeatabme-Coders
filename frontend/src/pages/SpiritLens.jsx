@@ -14,7 +14,7 @@ import Unavailable from '../components/ui/Unavailable.jsx'
 import { useToast } from '../components/ui/toastContext.js'
 import { useApiPost } from '../hooks/useApiPost.js'
 import { recordActivity } from '../lib/activity.js'
-import { setAnalysis } from '../lib/analysis.js'
+import { getSessionImages, rememberImages, setAnalysis } from '../lib/analysis.js'
 import './lens.css'
 
 // Limits from docs/api-contracts.md; the backend still has the final say.
@@ -52,6 +52,23 @@ function checkSize({ width, height }) {
   if (Math.max(width, height) > MAX_SIDE) return `This image is ${width}×${height} px. Each side must be at most ${MAX_SIDE} px.`
   if (Math.min(width, height) < MIN_SIDE) return `This image is ${width}×${height} px. Each side must be at least ${MIN_SIDE} px.`
   return null
+}
+
+function readAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = () => reject(reader.error)
+    reader.readAsDataURL(file)
+  })
+}
+
+// Keep this session's images in memory so the Dojo can show the comparison (never stored).
+async function keepForDojo(file, restoredSrc) {
+  const prev = getSessionImages()
+  const same = prev?.fileName === file.name && prev?.size === file.size
+  const originalUrl = same ? prev.originalUrl : await readAsDataUrl(file)
+  rememberImages({ fileName: file.name, size: file.size, originalUrl, restoredSrc: restoredSrc ?? (same ? prev.restoredSrc : null) })
 }
 
 function Warnings({ warnings }) {
@@ -145,6 +162,7 @@ export default function SpiritLens() {
       restore: { model_name: data.model_name, runtime_ms: data.runtime_ms, data_kind: data.data_kind, at: new Date().toISOString() },
     }))
     toast.show(`Restoration finished in ${data.runtime_ms} ms.`)
+    keepForDojo(upload.file, data.restored_image)
   }
 
   async function findSources() {
@@ -158,6 +176,7 @@ export default function SpiritLens() {
       detect: { method: data.method, count: data.count, sources: data.sources, data_kind: data.data_kind, at: new Date().toISOString() },
     }))
     toast.show(`${data.count} candidate source${data.count === 1 ? '' : 's'} found.`)
+    keepForDojo(upload.file, null)
   }
 
   const visibleSources = useMemo(

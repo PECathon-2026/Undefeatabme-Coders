@@ -237,8 +237,9 @@
 }
 
 .metric-value {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: var(--text-xl);
+  font-weight: 600;
   line-height: 1.1;
 }
 

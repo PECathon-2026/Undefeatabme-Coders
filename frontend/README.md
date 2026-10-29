@@ -99,7 +99,7 @@ Score shows LIVE, and the browser console has no CORS errors.
 2. **Watchtower**: search, sort (score, distance, cloud cover) and filter by radius; switch between map and list; open a spot for its score gauge and conditions; save favourites (kept in this browser); "Use my location" measures distances from you
 3. **Celestial Scroll**: featured next event with countdown; timeline, list and lunar-calendar views; type chips, search, date range; Upcoming / Past / Saved tabs; open an event to save it or set a reminder (bell icon = notification centre; reminders fire while the app is open)
 4. **Spirit Lens**: drag and drop (or choose) a JPEG/PNG (max 10 MB, 32–2048 px per side); **Restore**, then compare with the slider, side by side, zoom, pan and fullscreen; **Find candidate sources** to see the overlay and table (click a circle or a row to link them, filter by peak brightness); download the restored PNG and a JSON processing report
-5. **Dojo**: history of the Spirit Lens runs made in this browser
+5. **Dojo**: charts of the latest detection: where candidates sit in the image, peak-brightness and size histograms (click a bar to cross-filter everything), stat tiles, the original-vs-restored viewer (this session only), plus your history, saved locations and saved events
 
 ## Project structure
 
@@ -118,6 +118,7 @@ src/
     watchtower/         LocationDetail, LocationList
     events/             EventTimeline, EventCard, EventDetailDialog, FeaturedEvent, LunarCalendar
     notifications/      NotificationCenter
+    dojo/               Histogram, ScatterPlot (hand-built SVG, no chart library)
   hooks/                useApiGet, useApiPost, useLocationScores, useHashRoute, usePersistentState, useNow
   services/api.js       apiGet / apiPostFile; errors are thrown as {error: {code, message}}
   services/mock.js      MOCK responses from the API contract
@@ -125,7 +126,8 @@ src/
   styles/               tokens.css (colours, type, spacing, motion, layers) and base.css
 ```
 
-Pages are addressed by hash URLs (`/#/watchtower`), so the Back button and shared links work and
+Pages other than the Observatory are code-split with `React.lazy`, so the map and other heavy pages download
+only when first opened. Pages are addressed by hash URLs (`/#/watchtower`), so the Back button and shared links work and
 static hosts need no rewrite rules. Icons come from `lucide-react`.
 
 ## Data honesty
