@@ -1,9 +1,26 @@
-import { PanelLeftClose, PanelLeftOpen, Settings } from 'lucide-react'
+import { Bell, PanelLeftClose, PanelLeftOpen, Settings } from 'lucide-react'
 import MoonPhase from '../astronomy/MoonPhase.jsx'
+import { useReminders } from '../../lib/events.js'
 import { moonPhase } from '../../lib/moon.js'
 import { USE_MOCK } from '../../services/api.js'
 import { Emblem, Wordmark } from './Logo.jsx'
 import './layout.css'
+import '../notifications/notifications.css'
+
+function BellButton({ onClick }) {
+  const pending = useReminders().filter((r) => r.status === 'pending').length
+  const label = pending ? `Notifications, ${pending} reminder${pending === 1 ? '' : 's'} scheduled` : 'Notifications'
+  return (
+    <button type="button" className="icon-button bell-button" onClick={onClick} aria-label={label} title="Notifications">
+      <Bell size={20} aria-hidden="true" />
+      {pending > 0 && (
+        <span className="bell-count" aria-hidden="true">
+          {pending}
+        </span>
+      )}
+    </button>
+  )
+}
 
 // Small celestial status: today's moon and whether the app is on live or demo data.
 function CelestialStatus({ health, collapsed }) {
@@ -25,7 +42,7 @@ function CelestialStatus({ health, collapsed }) {
   )
 }
 
-export default function Navigation({ pages, current, onSelect, collapsed, onToggleCollapsed, onOpenSettings, health }) {
+export default function Navigation({ pages, current, onSelect, collapsed, onToggleCollapsed, onOpenSettings, onOpenNotifications, health }) {
   return (
     <>
       {/* Desktop and laptop: collapsible left sidebar */}
@@ -63,6 +80,7 @@ export default function Navigation({ pages, current, onSelect, collapsed, onTogg
             <button type="button" className="icon-button" onClick={onOpenSettings} aria-label="Settings" title="Settings">
               <Settings size={20} aria-hidden="true" />
             </button>
+            <BellButton onClick={onOpenNotifications} />
             <button
               type="button"
               className="icon-button"
@@ -85,6 +103,7 @@ export default function Navigation({ pages, current, onSelect, collapsed, onTogg
         </button>
         <div className="topbar-actions">
           <CelestialStatus health={health} collapsed />
+          <BellButton onClick={onOpenNotifications} />
           <button type="button" className="icon-button" onClick={onOpenSettings} aria-label="Settings">
             <Settings size={20} aria-hidden="true" />
           </button>

@@ -1,34 +1,11 @@
-import { useSyncExternalStore } from 'react'
+import { createLocalStore } from './localStore.js'
 
-// Recent Spirit Lens runs, kept in this browser only (localStorage). Never sent anywhere.
-const KEY = 'tw-activity'
+// Recent Spirit Lens runs, kept in this browser only. Never sent anywhere.
 const MAX_ITEMS = 10
-const listeners = new Set()
-let cache = load()
-
-function load() {
-  try {
-    return JSON.parse(localStorage.getItem(KEY)) ?? []
-  } catch {
-    return []
-  }
-}
+const store = createLocalStore('tw-activity', [])
 
 export function recordActivity(entry) {
-  cache = [{ ...entry, at: new Date().toISOString() }, ...cache].slice(0, MAX_ITEMS)
-  try {
-    localStorage.setItem(KEY, JSON.stringify(cache))
-  } catch {
-    // Storage unavailable: keep the in-memory copy.
-  }
-  listeners.forEach((fn) => fn())
+  store.set((list) => [{ ...entry, at: new Date().toISOString() }, ...list].slice(0, MAX_ITEMS))
 }
 
-function subscribe(fn) {
-  listeners.add(fn)
-  return () => listeners.delete(fn)
-}
-
-export function useActivity() {
-  return useSyncExternalStore(subscribe, () => cache)
-}
+export const useActivity = store.useValue

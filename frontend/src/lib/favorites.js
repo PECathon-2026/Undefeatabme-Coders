@@ -1,37 +1,13 @@
-import { useSyncExternalStore } from 'react'
+import { createLocalStore } from './localStore.js'
 
-// Favourite location ids, kept in this browser only (localStorage).
-const KEY = 'tw-favorites'
-const listeners = new Set()
-let cache = load()
-
-function load() {
-  try {
-    const ids = JSON.parse(localStorage.getItem(KEY))
-    return Array.isArray(ids) ? ids : []
-  } catch {
-    return []
-  }
-}
+// Favourite location ids, kept in this browser only.
+const store = createLocalStore('tw-favorites', [])
 
 // Returns true if the id is now a favourite.
 export function toggleFavorite(id) {
-  const added = !cache.includes(id)
-  cache = added ? [...cache, id] : cache.filter((x) => x !== id)
-  try {
-    localStorage.setItem(KEY, JSON.stringify(cache))
-  } catch {
-    // Storage unavailable: keep the in-memory copy.
-  }
-  listeners.forEach((fn) => fn())
+  const added = !store.get().includes(id)
+  store.set((ids) => (added ? [...ids, id] : ids.filter((x) => x !== id)))
   return added
 }
 
-function subscribe(fn) {
-  listeners.add(fn)
-  return () => listeners.delete(fn)
-}
-
-export function useFavorites() {
-  return useSyncExternalStore(subscribe, () => cache)
-}
+export const useFavorites = store.useValue

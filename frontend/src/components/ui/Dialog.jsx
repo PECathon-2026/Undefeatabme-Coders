@@ -1,10 +1,11 @@
 import { X } from 'lucide-react'
-import { useEffect, useRef } from 'react'
+import { useEffect, useId, useRef } from 'react'
 import './ui.css'
 
 // Modal built on the native <dialog>: focus is trapped, Esc closes, focus returns to the opener.
 export default function Dialog({ open, onClose, title, children, footer }) {
   const ref = useRef(null)
+  const titleId = useId()
 
   useEffect(() => {
     const dialog = ref.current
@@ -17,7 +18,7 @@ export default function Dialog({ open, onClose, title, children, footer }) {
     <dialog
       ref={ref}
       className="dialog"
-      aria-labelledby="dialog-title"
+      aria-labelledby={titleId}
       onClose={onClose}
       onClick={(e) => {
         if (e.target === ref.current) onClose()
@@ -25,7 +26,7 @@ export default function Dialog({ open, onClose, title, children, footer }) {
     >
       <div className="dialog-inner">
         <header className="dialog-header">
-          <h2 id="dialog-title">{title}</h2>
+          <h2 id={titleId}>{title}</h2>
           <button type="button" className="icon-button" onClick={onClose} aria-label="Close dialog">
             <X size={20} aria-hidden="true" />
           </button>

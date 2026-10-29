@@ -97,7 +97,7 @@ Score shows LIVE, and the browser console has no CORS errors.
 
 1. **Observatory** (home): tonight's moon, Night Honor Score, sky conditions, next major event, best nearby spot, recent Spirit Lens activity
 2. **Watchtower**: search, sort (score, distance, cloud cover) and filter by radius; switch between map and list; open a spot for its score gauge and conditions; save favourites (kept in this browser); "Use my location" measures distances from you
-3. **Celestial Scroll**: filter events by type and start date
+3. **Celestial Scroll**: featured next event with countdown; timeline, list and lunar-calendar views; type chips, search, date range; Upcoming / Past / Saved tabs; open an event to save it or set a reminder (bell icon = notification centre; reminders fire while the app is open)
 4. **Spirit Lens**: upload a JPEG/PNG (max 10 MB, 32–2048 px per side), press **Restore** to compare original and restored with the slider and zoom, then **Find candidate sources** to see the overlay and table
 5. **Dojo**: history of the Spirit Lens runs made in this browser
 

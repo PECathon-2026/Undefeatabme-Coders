@@ -16,6 +16,12 @@
   --paper-muted: #a9a59c;
   --live: #7fd18b;
 
+  /* Event type colours */
+  --type-moon_phase: #c8ccd8;
+  --type-meteor_shower: #e2c47f;
+  --type-eclipse: #e0524a;
+  --type-launch: #8fa3ff;
+
   /* Surfaces */
   --panel: rgba(14, 16, 26, 0.8);
   --panel-raised: rgba(24, 26, 40, 0.9);

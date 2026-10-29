@@ -1,6 +1,7 @@
 import { useId } from 'react'
 import './astronomy.css'
 
+// Pass `label` for a meaningful image; without it the moon is decorative (hidden from screen readers).
 // Path of the sunlit part of the disc for a phase fraction (0 new, 0.5 full), northern-hemisphere view.
 function litPath(fraction, r, cx, cy) {
   const k = Math.cos(2 * Math.PI * fraction)
@@ -21,8 +22,7 @@ export default function MoonPhase({ fraction, size = 120, label, glow = true }) 
       width={size}
       height={size}
       viewBox="0 0 100 100"
-      role="img"
-      aria-label={label}
+      {...(label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': true, focusable: 'false' })}
     >
       <defs>
         <radialGradient id={`lit-${id}`} cx="40%" cy="38%" r="70%">
