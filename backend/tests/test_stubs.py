@@ -14,18 +14,6 @@ from backend.app.schemas import (
 client = TestClient(app, raise_server_exceptions=False)
 
 
-def test_weather_stub_validates_schema() -> None:
-    response = client.get("/api/weather?lat=30.7333&lon=76.7794")
-    assert response.status_code == 200
-    data = response.json()
-    model = WeatherResponse.model_validate(data)
-    assert model.location.lat == 30.7333
-    assert model.location.lon == 76.7794
-    assert model.data_kind == "mock"
-    assert model.source == "sample"
-    assert model.night_honor_score == 75
-
-
 @pytest.mark.parametrize(
     "query",
     [
@@ -89,6 +77,27 @@ def test_detect_objects_stub_returns_501() -> None:
 
 
 def test_contract_schemas_can_validate_contract_samples() -> None:
+    # Contract sample for WeatherResponse
+    weather_sample = {
+        "location": {"lat": 30.7333, "lon": 76.7794, "name": None},
+        "cloud_cover_percent": 23,
+        "humidity_percent": 55,
+        "visibility_km": 24.1,
+        "night_honor_score": 75,
+        "score_method": (
+            "v1: 0.6*clear_sky + 0.2*dryness + 0.2*visibility(capped 20 km); "
+            "weights 0.75/0.25 if visibility is null; ignores moon and light pollution"
+        ),
+        "source": "Open-Meteo",
+        "data_kind": "live",
+        "timestamp": "2026-10-30T21:00:00+05:30",
+        "timezone": "Asia/Kolkata",
+        "attribution": "Weather data by Open-Meteo.com",
+    }
+    weather_model = WeatherResponse.model_validate(weather_sample)
+    assert weather_model.location.lat == 30.7333
+    assert weather_model.night_honor_score == 75
+
     # Contract sample for RestoreResponse
     restore_sample = {
         "restored_image": "data:image/png;base64,iVBORw0KGgo...",

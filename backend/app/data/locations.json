@@ -1,0 +1,65 @@
+[
+  {
+    "id": "sukhna-lake",
+    "name": "Sukhna Lake",
+    "lat": 30.7421,
+    "lon": 76.8188,
+    "provenance": "Curated by the team from OpenStreetMap; NOT verified for light pollution, access or safety",
+    "verified": false,
+    "data_kind": "curated"
+  },
+  {
+    "id": "siswan-dam",
+    "name": "Siswan Dam Catchment",
+    "lat": 30.865,
+    "lon": 76.738,
+    "provenance": "Curated by the team from OpenStreetMap; NOT verified for light pollution, access or safety",
+    "verified": false,
+    "data_kind": "curated"
+  },
+  {
+    "id": "mirzapur-dam",
+    "name": "Mirzapur Dam Reservoir",
+    "lat": 30.8931,
+    "lon": 76.7214,
+    "provenance": "Curated by the team from OpenStreetMap; NOT verified for light pollution, access or safety",
+    "verified": false,
+    "data_kind": "curated"
+  },
+  {
+    "id": "jayanti-dam",
+    "name": "Jayanti Dam Nature Trail",
+    "lat": 30.8522,
+    "lon": 76.8115,
+    "provenance": "Curated by the team from OpenStreetMap; NOT verified for light pollution, access or safety",
+    "verified": false,
+    "data_kind": "curated"
+  },
+  {
+    "id": "morni-hills",
+    "name": "Morni Hills Ridge",
+    "lat": 30.695,
+    "lon": 77.013,
+    "provenance": "Curated by the team from OpenStreetMap; NOT verified for light pollution, access or safety",
+    "verified": false,
+    "data_kind": "curated"
+  },
+  {
+    "id": "kaushalya-dam",
+    "name": "Kaushalya Dam",
+    "lat": 30.8624,
+    "lon": 76.9298,
+    "provenance": "Curated by the team from OpenStreetMap; NOT verified for light pollution, access or safety",
+    "verified": false,
+    "data_kind": "curated"
+  },
+  {
+    "id": "ropar-wetland",
+    "name": "Ropar Wetland Reserve",
+    "lat": 31.0089,
+    "lon": 76.5167,
+    "provenance": "Curated by the team from OpenStreetMap; NOT verified for light pollution, access or safety",
+    "verified": false,
+    "data_kind": "curated"
+  }
+]
