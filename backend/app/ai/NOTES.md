@@ -313,3 +313,83 @@ No routes, frontend, or shared documentation were edited. The OpenCV detector
 remains the default; SciPy, Astropy and Photutils are optional, while core
 operation requires only Pillow/NumPy/OpenCV. No samples, weights or output images
 belong in the commit.
+
+## A5 demo plan
+
+Use the three approved ESA/Hubble screen-size JPEG derivatives below. Each is
+published under CC BY 4.0; show the credit alongside the image and link its
+source page. These are display images, not raw observations.
+
+| File | Publisher image | Credit to show |
+| --- | --- | --- |
+| `heic0910e.jpg` | [Carina visible image](https://esahubble.org/images/heic0910e/) | NASA, ESA and the Hubble SM4 ERO Team |
+| `heic1509a.jpg` | [Westerlund 2](https://esahubble.org/images/heic1509a/) | NASA, ESA, the Hubble Heritage Team (STScI/AURA), A. Nota (ESA/STScI), and the Westerlund 2 Science Team |
+| `heic2007a.jpg` | [Tapestry of Blazing Starbirth](https://esahubble.org/images/heic2007a/) | NASA, ESA, and STScI |
+
+Suggested flow: start with Carina, upload it, compare the original and the
+baseline-restored candidate with the before/after slider, then request source
+detection on the original upload and show the candidate overlay. Repeat with
+Westerlund 2 if time permits; use Tapestry of Blazing Starbirth as the final
+example. Keep the original unchanged. Expect same-size output with a subtle
+algorithmic denoise/sharpen change, not new resolution or recovered scientific
+detail. Detections are visual candidates only; run detection against the
+original, never treat enhanced pixels as new evidence.
+
+Local service timings below were measured on the demo laptop described above
+(Windows 11, Ryzen 7 7840HS, CPU-only), using the actual AI service on each
+1280-pixel-wide sample, after a warm-up. Values are medians of the next two
+calls, end-to-end including decode and PNG encoding for restore. They do not
+include browser upload, network, or rendering time; hosted timings will vary.
+
+| Step | heic0910e | heic1509a | heic2007a |
+| --- | ---: | ---: | ---: |
+| Restore original-size image | 155 ms | 204 ms | 179 ms |
+| Detect candidates on original | 48 ms | 63 ms | 58 ms |
+| Expected detector result (`opencv-threshold-centroid`) | 200 candidates (cap reached) | 200 candidates (cap reached) | 200 candidates (cap reached) |
+
+The first restore call in a fresh process measured 275 ms, 199 ms and 177 ms,
+respectively. These measurements are for planning, not latency guarantees. All
+three detections reach the API's 200-candidate cap; counts do not represent
+confirmed astronomical objects. On the synthetic known-truth field the baseline
+restorer produced 200 candidates, so do not promise a fixed detection count on
+restored images.
+
+### Local fallback if the hosted backend is slow or unavailable
+
+From a fresh clone, install only the baseline backend dependencies, start the
+API locally with the explicit baseline detector settings, and point the
+frontend at `http://127.0.0.1:8000`:
+
+```powershell
+python -m pip install -r backend/requirements.txt
+$env:RESTORE_BACKEND = "baseline"
+$env:DETECT_BACKEND = "opencv"
+python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000
+```
+
+In another terminal, install and run the frontend with its API base URL set to
+the local backend:
+
+```powershell
+cd frontend
+npm ci
+$env:VITE_API_BASE_URL = "http://127.0.0.1:8000"
+$env:VITE_USE_MOCK = "false"
+npm run dev -- --host 127.0.0.1
+```
+
+Keep the sample images on the demo machine; do not commit them or generated
+outputs. If the hosted API is merely slow, switch to the local API rather than
+waiting on it. If local startup or upload also fails, show the original and use
+the pre-recorded measured timings above only as clearly labelled local
+evaluation results, not as live output.
+
+### Fresh-clone baseline verification
+
+Verified from a fresh local clone using a new Python 3.12 virtual environment
+with only `backend/requirements.txt` installed. A generated 96x96 synthetic
+star field restored to a 96x96 PNG with
+`opencv-nlmeans-unsharp-baseline`; original-image detection returned three
+candidate sources with `opencv-threshold-centroid`. No Photutils, Astropy,
+SciPy, torch, or torchvision package was installed or imported. The approved
+sample JPEGs remain ignored and are not needed to exercise baseline operation.
