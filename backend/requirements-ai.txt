@@ -1,3 +1,5 @@
-# Optional evaluation dependency; baseline requires none of this file.
+# Optional evaluation and detection dependencies; baseline requires none of this file.
 scipy==1.18.1
+photutils==3.1.1
+astropy==8.0.2
 # CPU torch/torchvision installation command and measured versions: ai/NOTES.md.

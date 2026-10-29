@@ -159,8 +159,7 @@ An important observed limitation: the restored synthetic baseline field can
 produce many extra detections because denoising changes the residual MAD and hence
 the detector threshold. Do not run the detector on enhanced output as if it were
 new evidence. Continue submitting the original upload to `detect_sources`.
-Detector changes belong to A3; this evaluation does not silently change that API
-or detector algorithm. Real-image PSNR is not reported: no clean reference exists.
+Real-image PSNR is not reported: no clean reference exists.
 
 ## Results
 
@@ -221,15 +220,49 @@ unconfirmed. GPU acceleration could only address speed. RL is also not promoted
 because the assumed PSF, noise amplification and visual changes do not justify
 replacing the baseline. Keep both methods available only in the local benchmark.
 
+## A3 source-detection comparison
+
+The optional `photutils-daostarfinder` backend uses sigma-clipped background
+statistics and maps candidates to the existing response schema. Set
+`DETECT_BACKEND=photutils` to opt in; the default remains
+`opencv-threshold-centroid`. Photutils and its Astropy/SciPy dependencies are
+imported lazily. If the optional detector is unavailable or fails, the service
+returns OpenCV candidates with a warning.
+
+The benchmark compared the supplied display-image samples and two synthetic
+fields. Coordinates were matched one-to-one within 2 pixels. Runtime is the
+median of calls 2 and 3 in each fresh worker; the first Photutils call includes
+library import overhead (about 1.1–1.2 seconds). These are local engineering
+measurements, not calibrated accuracy or live request latency.
+
+| Sample (dimensions) | OpenCV count | Photutils count | Matched within 2 px | Warm median runtime (OpenCV / Photutils, ms) |
+| --- | ---: | ---: | ---: | ---: |
+| heic0910e (1280x739) | 200 | 200 | 176 | 47.9 / 281.4 |
+| heic1509a (1280x959) | 200 | 200 | 129 | 45.2 / 335.5 |
+| heic2007a (1280x879) | 200 | 200 | 161 | 47.6 / 309.2 |
+| synthetic (1024x1024) | 3 | 3 | 3 | 36.5 / 194.5 |
+| synthetic-restored (1024x1024) | 200 | 51 | 51 | 33.2 / 308.2 |
+
+Both detectors recovered the three known synthetic source positions within
+0.11 px. The real-image runs all hit the 200-candidate cap, and no ground-truth
+catalogue is available; their matched counts cannot establish which detector is
+more accurate. The restored synthetic field is diagnostic only: it shows that
+enhancement changes detection counts and must not be treated as new evidence.
+Keep OpenCV as the default because it is substantially faster in these runs and
+the results do not establish an accuracy benefit for Photutils. The API schema
+and original-image input behavior are unchanged.
+
 Tests cover the original service contract, synthetic detection positions,
-validation, dimensions, singleton initialization under 20 concurrent calls,
-cached load failure, inference failure, invalid model output, input preservation,
+validation, dimensions, optional-detector fallback and missing dependencies,
+candidate limits, singleton initialization under 20 concurrent calls, cached
+load failure, inference failure, invalid model output, input preservation,
 metadata on success, unknown mode fallback, blocked optional imports in baseline
 and unqualified model modes, one-to-one matching, and constant-channel RL behaviour.
 Model loader tests use test-only predictors; they do not require downloaded
 weights or pretend that a model has passed qualification. The separate benchmark
 loaded the actual checkpoint and exercised colour and grayscale images.
 
-No routes, frontend, shared documentation, or baseline detection algorithm were
-edited. The optional dependency file contains SciPy only; core operation remains
-Pillow/NumPy/OpenCV. No samples, weights or output images belong in the commit.
+No routes, frontend, or shared documentation were edited. The OpenCV detector
+remains the default; SciPy, Astropy and Photutils are optional, while core
+operation requires only Pillow/NumPy/OpenCV. No samples, weights or output images
+belong in the commit.
