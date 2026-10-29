@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { apiPostFile } from '../services/api.js'
 
-const IDLE = { data: null, error: null, loading: false, startedAt: null }
+const IDLE = { data: null, error: null, loading: false, startedAt: null, uploaded: 0 }
 
-// Uploads a file with apiPostFile. Tracks loading, error, data and elapsed time.
+// Uploads a file with apiPostFile. Tracks loading, error, data, upload progress (0-1) and elapsed time.
 // A new run() or reset() aborts the request still in flight. run() resolves to the data, or null.
 export function useApiPost() {
   const [state, setState] = useState(IDLE)
@@ -24,13 +24,16 @@ export function useApiPost() {
     controllerRef.current = controller
     const startedAt = Date.now()
     setNow(startedAt)
-    setState({ data: null, error: null, loading: true, startedAt })
+    setState({ data: null, error: null, loading: true, startedAt, uploaded: 0 })
+    const onUploadProgress = (uploaded) => {
+      if (!controller.signal.aborted) setState((s) => ({ ...s, uploaded }))
+    }
     try {
-      const data = await apiPostFile(path, file, { signal: controller.signal })
-      setState({ data, error: null, loading: false, startedAt })
+      const data = await apiPostFile(path, file, { signal: controller.signal, onUploadProgress })
+      setState({ data, error: null, loading: false, startedAt, uploaded: 1 })
       return data
     } catch (err) {
-      if (!controller.signal.aborted) setState({ data: null, error: err.error, loading: false, startedAt })
+      if (!controller.signal.aborted) setState({ data: null, error: err.error, loading: false, startedAt, uploaded: 0 })
       return null
     }
   }, [])
