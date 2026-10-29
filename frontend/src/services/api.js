@@ -1,6 +1,7 @@
 // API client for the Tsukuyomi Watch backend (see docs/api-contracts.md).
 // Every failure is thrown as {error: {code, message}}, matching the backend error shape.
 // When VITE_USE_MOCK is "true", MOCK data from ./mock.js is returned instead of calling the API.
+// Pass {signal} from an AbortController to cancel a request; it then throws code "aborted".
 
 import { findMock, MOCK_DELAY_MS } from './mock.js'
 
@@ -12,8 +13,11 @@ function apiError(code, message) {
   return { error: { code, message } }
 }
 
-async function mockRequest(method, path) {
+const abortedError = () => apiError('aborted', 'Request was cancelled.')
+
+async function mockRequest(method, path, signal) {
   await new Promise((resolve) => setTimeout(resolve, MOCK_DELAY_MS))
+  if (signal?.aborted) throw abortedError()
   const data = findMock(method, path)
   if (data === undefined) {
     throw apiError('not_found', `No MOCK data for ${method} ${path}.`)
@@ -22,12 +26,13 @@ async function mockRequest(method, path) {
 }
 
 async function request(path, options) {
-  if (USE_MOCK) return mockRequest(options.method, path)
+  if (USE_MOCK) return mockRequest(options.method, path, options.signal)
 
   let response
   try {
     response = await fetch(`${BASE_URL}${path}`, options)
   } catch {
+    if (options.signal?.aborted) throw abortedError()
     throw apiError('network_error', 'Cannot reach the server. Is the backend running?')
   }
 
@@ -37,6 +42,7 @@ async function request(path, options) {
   } catch {
     // Non-JSON body; handled below.
   }
+  if (options.signal?.aborted) throw abortedError()
 
   if (!response.ok) {
     if (body?.error?.code) throw body
@@ -48,12 +54,12 @@ async function request(path, options) {
   return body
 }
 
-export function apiGet(path) {
-  return request(path, { method: 'GET' })
+export function apiGet(path, { signal } = {}) {
+  return request(path, { method: 'GET', signal })
 }
 
-export function apiPostFile(path, file) {
+export function apiPostFile(path, file, { signal } = {}) {
   const form = new FormData()
   form.append('file', file)
-  return request(path, { method: 'POST', body: form })
+  return request(path, { method: 'POST', body: form, signal })
 }

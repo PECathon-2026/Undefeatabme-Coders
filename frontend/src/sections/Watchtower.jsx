@@ -1,25 +1,95 @@
+import { useState } from 'react'
 import Card from '../components/Card.jsx'
 import EmptyState from '../components/EmptyState.jsx'
 import ErrorBox from '../components/ErrorBox.jsx'
 import Loading from '../components/Loading.jsx'
+import LocationMap from '../components/LocationMap.jsx'
 import StatusBadge from '../components/StatusBadge.jsx'
+import WeatherCard from '../components/WeatherCard.jsx'
 import { useApiGet } from '../hooks/useApiGet.js'
 
+const GEO_ERRORS = {
+  1: 'Location permission was denied.',
+  2: 'Your location is not available right now.',
+  3: 'Finding your location took too long.',
+}
+
+function weatherPath(point) {
+  if (!point) return null
+  return `/api/weather?lat=${point.lat.toFixed(4)}&lon=${point.lon.toFixed(4)}`
+}
+
 export default function Watchtower() {
-  const { data, error, loading, retry } = useApiGet('/api/locations')
+  const locations = useApiGet('/api/locations')
+  const [selected, setSelected] = useState(null)
+  const [geo, setGeo] = useState({ locating: false, error: null })
+  // Changing the selection aborts any weather request still in flight.
+  const weather = useApiGet(weatherPath(selected))
+
+  function locateMe() {
+    if (!navigator.geolocation) {
+      setGeo({ locating: false, error: 'This browser cannot share your location.' })
+      return
+    }
+    setGeo({ locating: true, error: null })
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setGeo({ locating: false, error: null })
+        setSelected({
+          lat: pos.coords.latitude,
+          lon: pos.coords.longitude,
+          name: 'Your location',
+          isUser: true,
+        })
+      },
+      (err) => setGeo({ locating: false, error: GEO_ERRORS[err.code] ?? err.message }),
+      { timeout: 10000, maximumAge: 300000 },
+    )
+  }
+
+  const list = locations.data?.locations ?? []
+
   return (
     <>
-      <p className="section-intro">Observing spots near you. The map comes in a later task.</p>
+      <p className="section-intro">
+        Pick a viewing spot on the map, or use your location, to see tonight&apos;s sky score.
+      </p>
+
+      <div className="watchtower-grid">
+        <Card title="Viewing map">
+          <div className="map-toolbar">
+            <button type="button" className="button" onClick={locateMe} disabled={geo.locating}>
+              {geo.locating ? 'Locating...' : 'Use my location'}
+            </button>
+          </div>
+          {geo.error && <p className="inline-error" role="alert">{geo.error}</p>}
+          <LocationMap locations={list} selected={selected} onSelect={setSelected} />
+        </Card>
+
+        <WeatherCard
+          placeName={selected ? selected.name : null}
+          weather={weather}
+          emptyMessage="Choose a location on the map or use your location."
+        />
+      </div>
+
       <Card title="Viewing locations">
-        {loading && <Loading label="Finding viewing spots..." />}
-        {error && <ErrorBox error={error} onRetry={retry} />}
-        {data && data.locations.length === 0 && <EmptyState message="No locations yet." />}
-        {data && data.locations.length > 0 && (
+        {locations.loading && <Loading label="Finding viewing spots..." />}
+        {locations.error && <ErrorBox error={locations.error} onRetry={locations.retry} />}
+        {locations.data && list.length === 0 && <EmptyState message="No locations yet." />}
+        {list.length > 0 && (
           <ul className="item-list">
-            {data.locations.map((loc) => (
+            {list.map((loc) => (
               <li key={loc.id}>
                 <div className="item-title">
-                  <strong>{loc.name}</strong>
+                  <button
+                    type="button"
+                    className="link-button"
+                    aria-pressed={selected?.name === loc.name && !selected?.isUser}
+                    onClick={() => setSelected({ lat: loc.lat, lon: loc.lon, name: loc.name })}
+                  >
+                    {loc.name}
+                  </button>
                   <StatusBadge dataKind={loc.data_kind} />
                 </div>
                 <p className="mono">
@@ -30,7 +100,7 @@ export default function Watchtower() {
             ))}
           </ul>
         )}
-        {data?.disclaimer && <p className="disclaimer">{data.disclaimer}</p>}
+        {locations.data?.disclaimer && <p className="disclaimer">{locations.data.disclaimer}</p>}
       </Card>
     </>
   )

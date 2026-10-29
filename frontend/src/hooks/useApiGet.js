@@ -2,33 +2,31 @@ import { useCallback, useEffect, useState } from 'react'
 import { apiGet } from '../services/api.js'
 
 // Fetches a GET endpoint and tracks loading / error / data. retry() fetches again.
+// Pass path = null to fetch nothing. A new path aborts the previous (stale) request.
 export function useApiGet(path) {
   const [attempt, setAttempt] = useState(0)
   const [result, setResult] = useState({ key: null, data: null, error: null })
-  const key = `${path}#${attempt}`
+  const key = path === null ? null : `${path}#${attempt}`
 
   useEffect(() => {
-    let cancelled = false
-    apiGet(path)
-      .then((data) => {
-        if (!cancelled) setResult({ key, data, error: null })
-      })
+    if (key === null) return undefined
+    const controller = new AbortController()
+    apiGet(path, { signal: controller.signal })
+      .then((data) => setResult({ key, data, error: null }))
       .catch((err) => {
-        if (!cancelled) setResult({ key, data: null, error: err.error })
+        if (!controller.signal.aborted) setResult({ key, data: null, error: err.error })
       })
-    return () => {
-      cancelled = true
-    }
+    return () => controller.abort()
   }, [path, key])
 
   const retry = useCallback(() => setAttempt((n) => n + 1), [])
 
   // Loading until a result arrives for the current request.
-  const loading = result.key !== key
+  const current = key !== null && result.key === key
   return {
-    data: loading ? null : result.data,
-    error: loading ? null : result.error,
-    loading,
+    data: current ? result.data : null,
+    error: current ? result.error : null,
+    loading: key !== null && !current,
     retry,
   }
 }
