@@ -1,12 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
-import Card from '../components/Card.jsx'
-import CompareSlider from '../components/CompareSlider.jsx'
-import DetectionOverlay from '../components/DetectionOverlay.jsx'
-import EmptyState from '../components/EmptyState.jsx'
-import ErrorBox from '../components/ErrorBox.jsx'
-import Loading from '../components/Loading.jsx'
-import StatusBadge from '../components/StatusBadge.jsx'
+import Card from '../components/ui/Card.jsx'
+import CompareSlider from '../components/image/CompareSlider.jsx'
+import DetectionOverlay from '../components/image/DetectionOverlay.jsx'
+import EmptyState from '../components/ui/EmptyState.jsx'
+import ErrorBox from '../components/ui/ErrorBox.jsx'
+import Loading from '../components/ui/Loading.jsx'
+import StatusBadge from '../components/ui/StatusBadge.jsx'
+import { useToast } from '../components/ui/toastContext.js'
 import { useApiPost } from '../hooks/useApiPost.js'
+import { recordActivity } from '../lib/activity.js'
+import './lens.css'
 
 // Limits from docs/api-contracts.md; the backend still has the final say.
 const MAX_BYTES = 10 * 1024 * 1024
@@ -65,6 +68,7 @@ export default function SpiritLens() {
   const urlRef = useRef(null)
   const restore = useApiPost()
   const detect = useApiPost()
+  const toast = useToast()
 
   // Revoke the preview URL when leaving the section.
   useEffect(() => () => urlRef.current && URL.revokeObjectURL(urlRef.current), [])
@@ -101,14 +105,22 @@ export default function SpiritLens() {
   const sizeError = size ? checkSize(size) : null
   const fileError = upload.error ?? sizeError
   const ready = Boolean(upload.file && size && !fileError)
-  const restoreImage = () => restore.run('/api/restore', upload.file)
-  const findSources = () => detect.run('/api/detect-objects', upload.file)
+  async function restoreImage() {
+    const data = await restore.run('/api/restore', upload.file)
+    if (!data) return
+    recordActivity({ action: 'restore', fileName: upload.file.name, width: data.width, height: data.height, dataKind: data.data_kind })
+    toast.show(`Restoration finished in ${data.runtime_ms} ms.`)
+  }
+
+  async function findSources() {
+    const data = await detect.run('/api/detect-objects', upload.file)
+    if (!data) return
+    recordActivity({ action: 'detect', fileName: upload.file.name, count: data.count, dataKind: data.data_kind })
+    toast.show(`${data.count} candidate source${data.count === 1 ? '' : 's'} found.`)
+  }
 
   return (
     <>
-      <p className="section-intro">
-        Upload a night-sky photo to enhance it and find candidate light sources.
-      </p>
 
       <p className="science-notice" role="note">
         {NOTICE}

@@ -95,27 +95,40 @@ Score shows LIVE, and the browser console has no CORS errors.
 
 ## Demo path
 
-1. **Dojo Dashboard** (landing): backend health, Night Honor Score for the chosen location, next 3 events, shortcut to Spirit Lens
-2. **Watchtower**: pick a viewing spot on the map or the list, or press "Use my location", to load its weather; the Dashboard then uses that location
+1. **Observatory** (home): tonight's moon, Night Honor Score, sky conditions, next major event, best nearby spot, recent Spirit Lens activity
+2. **Watchtower**: pick a viewing spot on the map or the list, or press "Use my location", to load its weather; the Observatory then uses that location
 3. **Celestial Scroll**: filter events by type and start date
 4. **Spirit Lens**: upload a JPEG/PNG (max 10 MB, 32–2048 px per side), press **Restore** to compare original and restored with the slider and zoom, then **Find candidate sources** to see the overlay and table
+5. **Dojo**: history of the Spirit Lens runs made in this browser
 
 ## Project structure
 
 ```
 src/
-  App.jsx               shell: header, navigation, section switching (no router)
-  sections/             DojoDashboard, Watchtower, CelestialScroll, SpiritLens
-  components/           Card, StatusBadge, Loading, ErrorBox, EmptyState, NavBar,
-                        WeatherCard, LocationMap, CompareSlider, DetectionOverlay, MoonMotif
-  hooks/                useApiGet (GET + abort stale), useApiPost (uploads + elapsed time)
+  App.jsx               shell: pages list, hash routes (#/watchtower), settings, focus handling
+  pages/                Observatory (home), Watchtower, CelestialScroll, SpiritLens, Dojo (+ one CSS file each)
+  components/
+    layout/             Navigation (sidebar + mobile bars), Atmosphere background, Logo, SettingsDialog
+    ui/                 Card, StatusBadge, MetricCard, Skeleton, Loading, ErrorBox, EmptyState,
+                        Unavailable, Dialog, Toast (+ ui.css)
+    astronomy/          MoonPhase (SVG), ScoreGauge
+    weather/            WeatherCard
+    maps/               LocationMap (Leaflet)
+    image/              CompareSlider, DetectionOverlay
+  hooks/                useApiGet, useApiPost, useLocationScores, useHashRoute, usePersistentState, useNow
   services/api.js       apiGet / apiPostFile; errors are thrown as {error: {code, message}}
   services/mock.js      MOCK responses from the API contract
-  lib/                  date formatting, default place, Leaflet icon fix
+  lib/                  moon phase maths, score bands, date formatting, places, activity history
+  styles/               tokens.css (colours, type, spacing, motion, layers) and base.css
 ```
+
+Pages are addressed by hash URLs (`/#/watchtower`), so the Back button and shared links work and
+static hosts need no rewrite rules. Icons come from `lucide-react`.
 
 ## Data honesty
 
 - Every data block shows where it came from: LIVE, MOCK, CURATED or COMPUTED (from `data_kind`).
 - Restored images and detections are **candidates**, not facts; Spirit Lens always shows this notice.
 - The frontend never invents events or values; missing values are shown as "not available".
+- Features the API does not provide yet (for example moonrise and moonset) say so instead of showing made-up data.
+- The moon phase on the home page is computed in the browser with the same approximate method as the backend, and is labelled COMPUTED.

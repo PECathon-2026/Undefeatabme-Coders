@@ -1,0 +1,33 @@
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.filters .field {
+  flex: 1 1 160px;
+  max-width: 260px;
+}
+
+.scroll-notice {
+  margin-bottom: var(--space-4);
+}
+
+.results-meta {
+  margin-bottom: var(--space-3);
+}
+
+.event-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.event-type {
+  color: var(--gold-bright);
+  font-size: var(--text-sm);
+}

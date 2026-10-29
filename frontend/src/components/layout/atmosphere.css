@@ -1,0 +1,87 @@
+/* Fixed, decorative background layers. Always behind content. */
+.atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-bg);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.atmo-gradient {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 45% at 78% 8%, rgba(236, 230, 214, 0.09), transparent 70%),
+    radial-gradient(ellipse 50% 40% at 10% 100%, rgba(179, 32, 42, 0.07), transparent 70%),
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(46, 58, 110, 0.25), transparent 70%),
+    linear-gradient(180deg, var(--navy) 0%, var(--obsidian) 75%);
+}
+
+.atmo-sky {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.star {
+  fill: #f2efe6;
+  opacity: 0.6;
+}
+
+.star.twinkle {
+  animation: twinkle 5s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  50% {
+    opacity: 0.15;
+  }
+}
+
+.atmo-constellations polyline {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 0.7;
+  stroke-dasharray: 3 4;
+  opacity: 0.35;
+}
+
+.atmo-constellations circle {
+  fill: var(--gold-bright);
+  opacity: 0.6;
+}
+
+.atmo-torii {
+  fill: #3a1216;
+  opacity: 0.8;
+}
+
+.atmo-mist {
+  animation: mist-drift 30s ease-in-out infinite alternate;
+}
+
+@keyframes mist-drift {
+  to {
+    transform: translateX(-40px);
+  }
+}
+
+.atmo-grain {
+  opacity: 0.6;
+  mix-blend-mode: overlay;
+}
+
+/* Quieter atmosphere on working pages so maps, charts and images stay readable */
+.atmosphere:not(.atmosphere-observatory) .atmo-sky {
+  opacity: 0.5;
+}
+
+.atmosphere-lens .atmo-sky,
+.atmosphere-dojo .atmo-sky {
+  opacity: 0.3;
+}
+
+.atmosphere-off .atmo-gradient {
+  background: linear-gradient(180deg, var(--navy) 0%, var(--obsidian) 75%);
+}

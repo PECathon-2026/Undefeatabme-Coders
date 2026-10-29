@@ -1,8 +1,9 @@
 import { useEffect } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
-import '../lib/leafletIcons.js'
-import { DEFAULT_PLACE, prefersReducedMotion } from '../lib/places.js'
+import '../../lib/leafletIcons.js'
+import './maps.css'
+import { DEFAULT_PLACE, prefersReducedMotion } from '../../lib/places.js'
 
 function FlyTo({ point }) {
   const map = useMap()

@@ -1,12 +1,13 @@
 import { useState } from 'react'
-import Card from '../components/Card.jsx'
-import EmptyState from '../components/EmptyState.jsx'
-import ErrorBox from '../components/ErrorBox.jsx'
-import Loading from '../components/Loading.jsx'
-import LocationMap from '../components/LocationMap.jsx'
-import StatusBadge from '../components/StatusBadge.jsx'
-import WeatherCard from '../components/WeatherCard.jsx'
+import Card from '../components/ui/Card.jsx'
+import EmptyState from '../components/ui/EmptyState.jsx'
+import ErrorBox from '../components/ui/ErrorBox.jsx'
+import Loading from '../components/ui/Loading.jsx'
+import LocationMap from '../components/maps/LocationMap.jsx'
+import StatusBadge from '../components/ui/StatusBadge.jsx'
+import WeatherCard from '../components/weather/WeatherCard.jsx'
 import { useApiGet } from '../hooks/useApiGet.js'
+import './watchtower.css'
 import { weatherPath } from '../lib/places.js'
 
 const GEO_ERRORS = {
@@ -47,9 +48,6 @@ export default function Watchtower({ place: selected, onPlaceChange: setSelected
 
   return (
     <>
-      <p className="section-intro">
-        Pick a viewing spot on the map, or use your location, to see tonight&apos;s sky score.
-      </p>
 
       <div className="watchtower-grid">
         <Card title="Viewing map">
