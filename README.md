@@ -7,6 +7,12 @@ Tsukuyomi Watch connects real-time atmospheric data with ancient Japanese night-
 
 ---
 
+## 📸 Preview
+
+![Tsukuyomi Watch Dashboard Preview](docs/assets/dashboard.png)
+
+---
+
 ## ⚡ Quickstart (How to Run Everything)
 
 To run the complete web app locally, open **two separate terminal windows** (one for backend, one for frontend).
